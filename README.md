@@ -14,6 +14,38 @@ Kirjoituksia ja kommentteja voidaan hakea tekijän ja ajankohdan mukaan. Pysyvä
 
 Sovellukseen kuuluu alustavasti tietokantatauluja kirjoituksille, moderaatiota varten ja käyttäjille. Käyttäjille ja kirjoituksille on tarjolla täysi crud-toiminnallisuus. Tietokanta on myös suunniteltu niin, että siitä voidaan poistaa käyttäjän tiedot kokonaan tietosuojan nimissä.
 
+![](tietokantadiagrammi.png)
+
+<!--
+
+Table account {
+  id INTEGEGER [pk]
+  user_name VARCHAR(20)
+  password_hash CHAR(60)
+}
+
+Table entry {
+  id INTEGER [pk]
+  post_id INTEGER [ref: > post.id]
+  text VARCHAR(140)
+  time INTEGER
+}
+
+Table post {
+  id INTEGER [pk]
+  account_id INTEGER [ref: - account.id]
+  parent INTEGER [ref: - post.id]
+}
+
+Table vote {
+  entry_id INTEGER [ref: > entry.id]
+  account_id INTEGER [ref: > account.id]
+  upvote BOOLEAN
+}
+
+
+-->
+
 ```
 
 /* Käyttäjätietokanta sisältää jokaista käyttäjää kohden tunnuksen ja bcryptin läpi käytetyn salasanan tiivisteen. Tunnus on muutettavissa, joten käyttäjän uniikki tunniste on keinotekoinen primääriavain.
