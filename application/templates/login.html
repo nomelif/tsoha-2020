@@ -2,15 +2,15 @@
 
 {% block body %}
 
-<form id="login">
+<form id="login" method="post">
     <h3>Kirjaudu sisään</h3>
-    <input placeholder="Käyttäjätunnus"/>
-    <input placeholder="Salasana"/>
+    <input name="account" placeholder="Käyttäjätunnus"/>
+    <input name="password" placeholder="Salasana"/>
     <input type="submit" value="Kirjaudu sisään"/>
 
     <p>Eikö sinulla ole tunnusta?</p>
 
-    <input type="submit" value="Luo tunnus"/>
+    <input name="create account" type="submit" value="Luo tunnus"/>
 </form>
 
 {% endblock %}

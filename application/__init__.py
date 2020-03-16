@@ -17,6 +17,7 @@ db = SQLAlchemy(app)
 # Luetaan kansiosta application tiedoston views sisältö
 from application import views
 
+from application.varkki import models
 
 # Luodaan lopulta tarvittavat tietokantataulut
 db.create_all()
