@@ -1,3 +1,19 @@
+@font-face{
+  font-family: cmu-roman;
+  src: url(/static/fonts/cmunorm.ttf);
+}
+
+body{
+  font-family: cmu-roman;
+  font-size: 1.5em;
+}
+
+hr{
+  border-style: solid;
+  border-width: 1px;
+  border-color: black;
+}
+
 footer{
   display: block;
   position: absolute;
@@ -9,7 +25,7 @@ footer{
 #login{
   display: block;
   border-style: solid;
-  border-width: 1px;
+  border-width: 2px;
   width: 50%;
   margin-left: 25%;
   margin-right: 25%;
