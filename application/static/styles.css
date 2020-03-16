@@ -5,3 +5,37 @@ footer{
   left: 1em;
   right: 1em;
 }
+
+#login{
+  display: block;
+  border-style: solid;
+  border-width: 1px;
+  width: 50%;
+  margin-left: 25%;
+  margin-right: 25%;
+  margin-top: 5em;
+}
+
+#login input{
+  display: block;
+  width: 80%;
+  margin-top: 1em;
+  margin-bottom: 1em;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+#login p{
+  text-align: center;
+}
+
+#login input[type=submit]{
+  margin-top: 2em;
+  margin-bottom: 2em;
+}
+
+#login h3{
+  text-align: center;
+  margin-top: 2em;
+  margin-bottom: 2em;
+}
