@@ -8,6 +8,14 @@
 
     <body>
 
+        {% if user_name %}
+
+        <header style="text-align: right;">
+            <a href="/newpost"><img src="/static/create.svg" style="margin-bottom: -5px"/></a> {{user_name}} <a href="/logout"><img src="/static/logout.svg" style="margin-bottom: -5px;"/></a>
+        </header>
+
+        {% endif %}
+
         {% block body %}
 
         {% endblock %}

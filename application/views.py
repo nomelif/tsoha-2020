@@ -17,7 +17,8 @@ def index():
 @login_required
 def newpost():
     if request.method == "GET":
-        return render_template("newpost.html", title="Uusi postaus")
+        account = Account.query.filter_by(id=current_user.get_id()).first()
+        return render_template("newpost.html", title="Uusi postaus", user_name=account.user_name)
     else:
         post = Post(current_user.get_id(), None)
         db.session().add(post)
