@@ -22,7 +22,10 @@ def logout():
 def login():
 
     if current_user.is_authenticated:
-        return redirect(url_for("index"))
+        if request.args.get("next") == None:
+            return redirect(url_for("index"))
+        else:
+            return redirect(request.args.get("next"))
 
     if request.method == "GET":
         return render_template("login.html", title="Kirjaudu Värkkiin")
@@ -43,7 +46,10 @@ def login():
             db.session().add(account)
             db.session().commit()
             login_user(account)
-            return redirect(url_for("index"))
+            if request.args.get("next") == None:
+                return redirect(url_for("index"))
+            else:
+                return redirect(request.args.get("next"))
         except sqlalchemy.exc.IntegrityError:
             return render_template("login.html", title="Kirjaudu Värkkiin", error_message="Käyttäjätunnus on jo käytössä.", hide_login=True)
     else:
@@ -52,4 +58,7 @@ def login():
             return render_template("login.html", title="Kirjaudu sisään", error_message="Käyttäjätunnus ja salasana eivät täsmää.", hide_signup=True)
         else:
             login_user(account)
-            return redirect(url_for("index"))
+            if request.args.get("next") == None:
+                return redirect(url_for("index"))
+            else:
+                return redirect(request.args.get("next"))
