@@ -1,6 +1,6 @@
 from application import app, db
 from flask import render_template, request, redirect, url_for
-from application.varkki.models import Account
+from application.varkki.models import Account, Post, Entry
 from flask_login import login_required, current_user, login_user, logout_user
 import bcrypt
 import sqlalchemy
@@ -12,6 +12,20 @@ def index():
         return render_template("index.html", user_name=account.user_name, title="Värkki")
     else:
         return render_template("index-unlogged.html", title="Värkki (kirjautumaton)")
+
+@app.route("/newpost", methods=["POST", "GET"])
+@login_required
+def newpost():
+    if request.method == "GET":
+        return render_template("newpost.html", title="Uusi postaus")
+    else:
+        post = Post(current_user.get_id(), None)
+        db.session().add(post)
+        db.session().commit()
+        entry = Entry(post.id, request.form.get("message"))
+        db.session().add(entry)
+        db.session().commit()
+        return redirect(url_for("index"))
 
 @app.route("/logout")
 def logout():

@@ -1,5 +1,31 @@
 from application import db
 import bcrypt
+import time
+
+class Entry(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    post_id = db.Column(db.Integer, db.ForeignKey("post.id"), nullable=False)
+    text = db.Column(db.String(140), nullable=False)
+    timestamp = db.Column(db.Integer, nullable=False)
+    post = db.relationship("Post", foreign_keys="Entry.post_id")
+
+    def __init__(self, post_id, text):
+        self.post_id = post_id
+        self.text = text
+        self.timestamp = int(time.time())
+
+class Post(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    account_id = db.Column(db.Integer, db.ForeignKey("account.id"), nullable=True)
+    parent_id = db.Column(db.Integer, db.ForeignKey("post.id"), nullable=True)
+
+    account = db.relationship("Account", foreign_keys="Post.account_id")
+    parent = db.relationship("Post", foreign_keys="Post.parent_id")
+
+    def __init__(self, account_id, parent):
+        self.account_id = account_id
+        if parent != None:
+            self.parent = parent
 
 class Account(db.Model):
     id = db.Column(db.Integer, primary_key=True)

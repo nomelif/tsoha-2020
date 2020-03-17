@@ -27,7 +27,11 @@ footer{
   margin-right: 25%;
 }
 
-.main-form input{
+textarea{
+  font-family: cmu-roman;
+}
+
+.main-form input, .main-form textarea{
   display: block;
   width: 80%;
   margin-top: 1em;
