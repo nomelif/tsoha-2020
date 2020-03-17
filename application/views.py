@@ -38,7 +38,7 @@ def login():
         account = Account.query.filter_by(user_name=request.form.get("account")).first()
         if account == None or password == None:
             return render_template("login.html", title="Kirjaudu sisään")
-        elif bcrypt.checkpw(password.encode("utf-8"), account.password_hash):
+        elif bcrypt.checkpw(password.encode("utf-8"), account.password_hash.encode("utf-8")):
             login_user(account)
             return redirect(url_for("index"))
         else:
