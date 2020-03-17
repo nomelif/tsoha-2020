@@ -11,7 +11,7 @@
 
 ## Viestittely
 
-* Käyttäjä tahtoo luoda värkkiin postauksen, sillä mieleen juolahti jotain, mitä ei kehtaa paikalle kokoontuneille perheen jäsenille sanoa ääneen.
+* Käyttäjä tahtoo luoda värkkiin postauksen, sillä mieleen juolahti jotain, mitä ei kehtaa paikalle kokoontuneille perheen jäsenille sanoa ääneen. ✓
 * Käyttäjä tahtoo muokata postausta, sillä hän huomasi siinä ikävän kirjoitusvirheen.
 * Käyttäjä tahtoo poistaa postauksen, koska häpeää sitä kuollakseen. Internet ei kuitenkaan ikinä unohda.
 * Käyttäjä tahtoo vastata postaukseen, sillä eihän nyt tuollaista roskaa voi internettiin kirjoittaa.
