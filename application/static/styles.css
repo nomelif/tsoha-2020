@@ -20,14 +20,14 @@ footer{
   right: 1em;
 }
 
-#login{
+.main-form{
   display: block;
   width: 50%;
   margin-left: 25%;
   margin-right: 25%;
 }
 
-#login input{
+.main-form input{
   display: block;
   width: 80%;
   margin-top: 1em;
@@ -36,16 +36,16 @@ footer{
   margin-right: auto;
 }
 
-#login p{
+.main-form p{
   text-align: center;
 }
 
-#login input[type=submit]{
+.main-form input[type=submit]{
   margin-top: 2em;
   margin-bottom: 2em;
 }
 
-#login h3{
+.main-form h3{
   margin-top: 2em;
   margin-bottom: 2em;
 }
