@@ -7,7 +7,7 @@
     {% if error_message %}
     <p>{{error_message}}</p>
     {% endif %}
-    <textarea name="message" placeholder="Postauksen sisältö (maksimissaan 140 merkkiä)"></textarea>
+    <textarea name="message" placeholder="Postauksen sisältö (maksimissaan 140 merkkiä)">{{post_content}}</textarea>
     <input type="submit" value="Lähetä"/>
 </form>
 

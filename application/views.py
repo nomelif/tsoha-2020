@@ -16,11 +16,16 @@ def index():
 @app.route("/newpost", methods=["POST", "GET"])
 @login_required
 def newpost():
+
+    account = Account.query.filter_by(id=current_user.get_id()).first()
     if request.method == "GET":
-        account = Account.query.filter_by(id=current_user.get_id()).first()
         return render_template("newpost.html", title="Uusi postaus", user_name=account.user_name)
     else:
-        post = Post(current_user.get_id(), None)
+        if request.form.get("message") == None or request.form.get("message") == "":
+            return render_template("newpost.html", title="Uusi postaus", user_name=account.user_name, error_message="Viesti ei voi olla tyhjä")
+        elif len(request.form.get("message")) > 140:
+            return render_template("newpost.html", title="Uusi postaus", user_name=account.user_name, error_message=f"Viestisi ylittää maksimipituuden ({len(request.form.get('message'))}/140)", post_content=request.form.get("message"))
+        post = Post(account.id, None)
         db.session().add(post)
         db.session().commit()
         entry = Entry(post.id, request.form.get("message"))
