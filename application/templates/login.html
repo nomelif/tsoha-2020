@@ -4,13 +4,20 @@
 
 <form id="login" method="post">
     <h3>Kirjaudu sisään</h3>
+    {% if error_message %}
+    <p>{{error_message}}</p>
+    {% endif %}
     <input name="account" placeholder="Käyttäjätunnus"/>
     <input type="password" name="password" placeholder="Salasana"/>
+    {% if not hide_login %}
     <input type="submit" value="Kirjaudu sisään"/>
-
+    {% endif %}
+    {% if not hide_login and not hide_signup %}
     <p>Eikö sinulla ole tunnusta?</p>
-
+    {% endif %}
+    {% if not hide_signup %}
     <input name="create account" type="submit" value="Luo tunnus"/>
+    {% endif %}
 </form>
 
 {% endblock %}
