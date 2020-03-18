@@ -12,6 +12,10 @@ h3{
   text-align: center;
 }
 
+em{
+  font-family: 
+}
+
 footer{
   display: block;
   position: absolute;
@@ -31,7 +35,16 @@ textarea{
   font-family: cmu-roman;
 }
 
-.main-form input, .main-form textarea{
+.postcard {
+  border-style: solid;
+  border-width: 1px;
+}
+
+.postcard > label{
+  text-align: center;
+}
+
+.postcard > label, .main-form > input, .main-form > input[type=submit], .main-form > textarea{
   display: block;
   width: 80%;
   margin-top: 1em;
@@ -53,3 +66,4 @@ textarea{
   margin-top: 2em;
   margin-bottom: 2em;
 }
+
