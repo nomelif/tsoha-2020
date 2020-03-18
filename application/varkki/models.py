@@ -50,7 +50,7 @@ WHERE
     FROM
       post
     WHERE
-      post.id == entry.id
+      post.id = entry.id
   ) != :poster
 
   -- Don't generate votes if one has been allocated
@@ -61,9 +61,9 @@ WHERE
     FROM 
       vote
     where 
-      vote.entry_id == entry.id
-      AND vote.account_id == :poster
-  ) == 0
+      vote.entry_id = entry.id
+      AND vote.account_id = :poster
+  ) = 0
 
   -- Don't generate votes on entries which have been "sold out"
 
@@ -73,7 +73,7 @@ WHERE
     FROM 
       vote
     where 
-      vote.entry_id == entry.id
+      vote.entry_id = entry.id
   ) < 3
   LIMIT
     :needed
