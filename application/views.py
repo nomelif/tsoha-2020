@@ -1,9 +1,12 @@
 from application import app, db
 from flask import render_template, request, redirect, url_for
-from application.varkki.models import Account, Post, Entry
+from application.varkki.models import Account, Post, Entry, Vote
 from flask_login import login_required, current_user, login_user, logout_user
 import bcrypt
 import sqlalchemy
+import markdown
+import bleach
+import jinja2
 
 @app.route("/")
 def index():
@@ -19,7 +22,14 @@ def newpost():
 
     account = Account.query.filter_by(id=current_user.get_id()).first()
     if request.method == "GET":
-        return render_template("newpost.html", title="Uusi postaus", user_name=account.user_name)
+        options = []
+        votes, entries = Vote.find_votes_for(account.id)
+        for vote, entry in zip(votes, entries):
+            #print(entry.text)
+            #print(bleach.clean(entry.text))
+            #print(markdown.markdown(bleach.clean(entry.text)))
+            options.append([vote.id, bleach.clean(entry.text)])
+        return render_template("newpost.html", title="Uusi postaus", user_name=account.user_name, options=options)
     else:
         if request.form.get("message") == None or request.form.get("message") == "":
             return render_template("newpost.html", title="Uusi postaus", user_name=account.user_name, error_message="Viesti ei voi olla tyhjä")

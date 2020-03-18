@@ -2,6 +2,102 @@ from application import db
 import bcrypt
 import time
 
+class Vote(db.Model):
+
+    # This seems unavoidable. Oof.
+
+    id = db.Column(db.Integer, primary_key=True)
+    
+    entry_id = db.Column(db.Integer, db.ForeignKey("entry.id"), nullable=False)
+    account_id = db.Column(db.Integer, db.ForeignKey("account.id"), nullable=True)
+    upvote = db.Column(db.Boolean, nullable=True)
+
+    __table_args__ = (
+        db.CheckConstraint("account_id IS NOT NULL OR upvote IS NOT NULL"),
+    )
+
+    def __init__(self, entry_id, account_id, upvote):
+        if entry_id != None:
+            self.entry_id = entry_id
+        if account_id != None:
+            self.account_id = account_id
+        if upvote != None:
+            self.upvote = upvote
+
+    # Class method
+
+    def find_votes_for(account_id):
+
+        # Find votes that have already been allocated to the given user and with null upvote
+        # There should never be more than three
+
+        votes = Vote.query.filter_by(account_id=account_id, upvote=None).all()
+
+        # Fish unreviewed entries
+
+        generated = db.session().execute("""
+SELECT
+  id
+FROM
+  entry
+WHERE
+
+  -- Don't generate votes on self posts
+
+  (
+    SELECT
+      post.account_id
+    FROM
+      post
+    WHERE
+      post.id == entry.id
+  ) != :poster
+
+  -- Don't generate votes if one has been allocated
+
+  AND (
+    SELECT 
+      COUNT(*)
+    FROM 
+      vote
+    where 
+      vote.entry_id == entry.id
+      AND vote.account_id == :poster
+  ) == 0
+
+  -- Don't generate votes on entries which have been "sold out"
+
+  AND (
+    SELECT 
+      COUNT(*)
+    FROM 
+      vote
+    where 
+      vote.entry_id == entry.id
+  ) < 3
+  LIMIT
+    :needed
+
+  """, {"poster":account_id, "needed":3-len(votes)})
+
+        new_votes = []
+
+        for row in generated:
+            new_votes.append(Vote(row[0], account_id, None))
+            db.session().add(new_votes[-1])
+        db.session().commit()
+
+        votes.extend(new_votes)
+
+        # By now we have as many votes as are available, find the texts of the associated entries
+
+        entries = []
+        for vote in votes:
+            entries.append(Entry.query.filter_by(id=vote.entry_id).first())
+
+        return votes, entries
+
+
 class Entry(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     post_id = db.Column(db.Integer, db.ForeignKey("post.id"), nullable=False)

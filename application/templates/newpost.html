@@ -8,6 +8,12 @@
     <p>{{error_message}}</p>
     {% endif %}
     <textarea name="message" placeholder="Postauksen sisältö (maksimissaan 140 merkkiä)">{{post_content}}</textarea>
+    {% for option in options %}
+       <div class="postcard">
+       {{option[1]|markdown}}
+       <label><input type="checkbox" name="vote-{{option[0]}}"/>Viesti on rakentava</label>
+       </div>
+    {% endfor %}
     <input type="submit" value="Lähetä"/>
 </form>
 
