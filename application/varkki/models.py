@@ -235,6 +235,13 @@ class Entry(db.Model):
 
         return entries
 
+    def delete_entry(entry_id, account_id):
+        if db.session.execute("SELECT COUNT(*) FROM entry WHERE (SELECT post.account_id FROM post WHERE post.id = entry.post_id) = :deleter AND id = :entry", {"deleter":account_id, "entry":entry_id}).fetchone()[0] == 1:
+            db.session.execute("DELETE FROM entry WHERE id = :entry", {"entry": entry_id})
+
+            if not os.environ.get("HEROKU"):
+                db.session.execute("DELETE FROM vote WHERE entry_id = :entry", {"entry": entry_id})
+
 class Post(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     account_id = db.Column(db.Integer, db.ForeignKey("account.id"), nullable=True)
@@ -251,7 +258,7 @@ class Post(db.Model):
     def get_displayable_posts():
 
         return db.session.execute("""
-SELECT text
+SELECT text, entry.id, post.account_id
 FROM   post
        INNER JOIN entry
                ON post.id = entry.post_id

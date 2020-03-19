@@ -8,11 +8,18 @@ import markdown
 import bleach
 import jinja2
 
+@app.route("/delete/<int:entry_id>")
+@login_required
+def delete(entry_id):
+    Entry.delete_entry(entry_id, current_user.get_id())
+    db.session.commit()
+    return redirect(url_for("index"))
+
 @app.route("/")
 def index():
     if current_user.is_authenticated:
         account = Account.query.filter_by(id=current_user.get_id()).first()
-        return render_template("index.html", user_name=account.user_name, posts=Post.get_displayable_posts(), title="Värkki")
+        return render_template("index.html", user_name=account.user_name, account_id=account.id, posts=Post.get_displayable_posts(), title="Värkki")
     else:
         return render_template("index-unlogged.html", title="Värkki (kirjautumaton)")
 
