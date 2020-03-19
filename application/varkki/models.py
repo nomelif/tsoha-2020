@@ -3,13 +3,14 @@ import bcrypt
 import time
 import os
 
-def submit_post(votes_cast, account_id, message):
-
-    # Check validity of message
+def submit_post(votes_cast, account_id, message, post_id):
 
     message_valid = True
     votes_current = True
+    post_valid = True
     error_message = None
+
+    # Check validity of message
 
     if message == None or message == "":
         message_valid = False
@@ -24,9 +25,22 @@ def submit_post(votes_cast, account_id, message):
     if message_valid and len(Vote._potential_votes(account_id)) != 0:
         votes_current = True
         error_message = "Lisää äänestettävää on ilmestynyt"
+
+    # Check if the new post is an edit. If so, is the post_id valid and belonging to the right user?
+
+    if post_id != None:
+        try:
+            post_id = int(post_id)
+        except:
+            post_valid = False
+            error_message = "Muokattava viesti epäkelpo"
+        else:
+            if db.session.execute("SELECT COUNT(*) FROM post WHERE id = :post AND account_id = :poster", {"post":post_id, "poster":account_id}).fetchone()[0] != 1:
+                post_valid = False
+                error_message = "Muokattava viesti ei kuulu sinulle"
         
 
-    if not (message_valid and votes_current):
+    if not (message_valid and votes_current and post_valid):
         result = {"failure":True, "error_message":error_message}
         result["votes"] = Vote._ensure_votes(account_id)
         result["entries"] = Entry._entries_for_votes(result["votes"])
@@ -39,10 +53,12 @@ def submit_post(votes_cast, account_id, message):
 
     if vote_result == None:
 
-        p = Post(account_id, None)
-        db.session.add(p)
-        db.session.commit()
-        e = Entry(p.id, message)
+        if post_id == None:
+            p = Post(account_id, None)
+            db.session.add(p)
+            db.session.commit()
+            post_id = p.id
+        e = Entry(post_id, message)
         db.session.add(e)
 
         db.session.commit()
@@ -263,7 +279,7 @@ FROM   post
        INNER JOIN entry
                ON post.id = entry.post_id
        INNER JOIN (SELECT post_id,
-                          Max(timestamp)
+                          Max(timestamp) AS max_timestamp
                    FROM   entry
                    WHERE  (SELECT Count(*)
                            FROM   vote
@@ -271,6 +287,7 @@ FROM   post
                                   AND vote.upvote = true) >= 2
                    GROUP  BY post_id) AS pid_map
                ON post.id = pid_map.post_id
+                  AND entry.timestamp = pid_map.max_timestamp
 WHERE  post.parent_id IS NULL
 ORDER  BY entry.timestamp DESC  
         """).fetchall()

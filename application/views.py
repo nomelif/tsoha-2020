@@ -42,7 +42,7 @@ def newpost():
         votes, entries = Vote.ensure_votes(account.id) # <- contains commit
         display_page=True
     else:
-        result = submit_post(tuple([key[5:] for key in request.form.keys() if key.startswith("vote-") and request.form.get(key) == "on"]), account.id, request.form.get("message")) # <- contains commit or rollback
+        result = submit_post(tuple([key[5:] for key in request.form.keys() if key.startswith("vote-") and request.form.get(key) == "on"]), account.id, request.form.get("message"), request.args.get("post_id")) # <- contains commit or rollback
         if result["failure"]:
             votes = result["votes"]
             entries = result["entries"]
