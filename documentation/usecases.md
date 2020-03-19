@@ -20,7 +20,7 @@
 
 ## Moderaatio
 
-* Käyttäjä haluaa, ettei ihan mitä sattuu roskaa osu nokan eteen. Tämän seurauksena hän suostuu hyväksymään tai hylkäämään postauksia ennen kuin itse näpyttää.
+* Käyttäjä haluaa, ettei ihan mitä sattuu roskaa osu nokan eteen. Tämän seurauksena hän suostuu hyväksymään tai hylkäämään postauksia ennen kuin itse näpyttää. ✓
 
 ## Haku ja selaaminen
 

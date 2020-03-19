@@ -2,7 +2,7 @@
 
 ## Nykytila
 
-Tällä hetkellä sovellukseen on toteutettu vasta käyttäjätietokanta, postaustietokanta ja entrytietokanta.
+Sovellukseen on toteutettu kaikki alla mainitut taulut lukuun ottamatta mahdollista hakusanataulua.
 
 ## Tämän hetkinen suunnitelma
 
