@@ -12,7 +12,7 @@ import jinja2
 def index():
     if current_user.is_authenticated:
         account = Account.query.filter_by(id=current_user.get_id()).first()
-        return render_template("index.html", user_name=account.user_name, title="Värkki")
+        return render_template("index.html", user_name=account.user_name, posts=Post.get_displayable_posts(), title="Värkki")
     else:
         return render_template("index-unlogged.html", title="Värkki (kirjautumaton)")
 

@@ -248,6 +248,26 @@ class Post(db.Model):
         if parent != None:
             self.parent = parent
 
+    def get_displayable_posts():
+
+        return db.session.execute("""
+SELECT text
+FROM   post
+       INNER JOIN entry
+               ON post.id = entry.post_id
+       INNER JOIN (SELECT post_id,
+                          Max(timestamp)
+                   FROM   entry
+                   WHERE  (SELECT Count(*)
+                           FROM   vote
+                           WHERE  vote.entry_id = entry.id
+                                  AND vote.upvote = true) >= 2
+                   GROUP  BY post_id) AS pid_map
+               ON post.id = pid_map.post_id
+WHERE  post.parent_id IS NULL
+ORDER  BY entry.timestamp DESC  
+        """).fetchall()
+
 class Account(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     user_name = db.Column(db.String(20), nullable=False, unique=True)

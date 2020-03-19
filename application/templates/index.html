@@ -2,4 +2,14 @@
 
 {% block body %}
 
+    <div class="main-form"/>
+
+    {% for post in posts %}
+       <div class="postcard">
+       {{post[0]|markdown}}
+       </div>
+    {% endfor %}
+
+    </div>
+
 {% endblock %}
