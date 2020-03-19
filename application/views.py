@@ -1,6 +1,6 @@
 from application import app, db
 from flask import render_template, request, redirect, url_for
-from application.varkki.models import Account, Post, Entry, Vote
+from application.varkki.models import Account, Post, Entry, Vote, submit_post
 from flask_login import login_required, current_user, login_user, logout_user
 import bcrypt
 import sqlalchemy
@@ -17,30 +17,37 @@ def index():
         return render_template("index-unlogged.html", title="Värkki (kirjautumaton)")
 
 @app.route("/newpost", methods=["POST", "GET"])
-@login_required
+@login_required # <- First SQL interaction, only reads
 def newpost():
 
-    account = Account.query.filter_by(id=current_user.get_id()).first()
-    if request.method == "GET":
-        options = []
-        votes, entries = Vote.find_votes_for(account.id)
-        for vote, entry in zip(votes, entries):
-            #print(entry.text)
-            #print(bleach.clean(entry.text))
-            #print(markdown.markdown(bleach.clean(entry.text)))
-            options.append([vote.id, bleach.clean(entry.text)])
-        return render_template("newpost.html", title="Uusi postaus", user_name=account.user_name, options=options)
+    account = Account.query.filter_by(id=current_user.get_id()).first() # <- Read only SQL
+
+    display_page = False
+    error_message = None
+    post_content = ""
+
+    # Figure out the available votes (for display if the page gets displayed or for reference if a vote is cast)
+
+    options = []
+    votes, entries = None, None
+
+    if request.method == "GET": # Just return the blank page
+        votes, entries = Vote.ensure_votes(account.id) # <- contains commit
+        display_page=True
     else:
-        if request.form.get("message") == None or request.form.get("message") == "":
-            return render_template("newpost.html", title="Uusi postaus", user_name=account.user_name, error_message="Viesti ei voi olla tyhjä")
-        elif len(request.form.get("message")) > 140:
-            return render_template("newpost.html", title="Uusi postaus", user_name=account.user_name, error_message=f"Viestisi ylittää maksimipituuden ({len(request.form.get('message'))}/140)", post_content=request.form.get("message"))
-        post = Post(account.id, None)
-        db.session().add(post)
-        db.session().commit()
-        entry = Entry(post.id, request.form.get("message"))
-        db.session().add(entry)
-        db.session().commit()
+        result = submit_post(tuple([key[5:] for key in request.form.keys() if key.startswith("vote-") and request.form.get(key) == "on"]), account.id, request.form.get("message")) # <- contains commit or rollback
+        if result["failure"]:
+            votes = result["votes"]
+            entries = result["entries"]
+            post_content = request.form.get("message")
+            error_message = result["error_message"]
+            display_page=True
+
+    if display_page:
+        for vote, entry in zip(votes, entries):
+            options.append([vote.id, bleach.clean(entry.text)])
+        return render_template("newpost.html", title="Uusi postaus", user_name=account.user_name, options=options, error_message=error_message, post_content=post_content)
+    else: # Redirect to index
         return redirect(url_for("index"))
 
 @app.route("/logout")

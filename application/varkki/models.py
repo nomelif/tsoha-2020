@@ -1,6 +1,60 @@
 from application import db
 import bcrypt
 import time
+import os
+
+def submit_post(votes_cast, account_id, message):
+
+    # Check validity of message
+
+    message_valid = True
+    votes_current = True
+    error_message = None
+
+    if message == None or message == "":
+        message_valid = False
+        error_message = "Viestin ei tule olla tyhjä"
+    elif len(message) > 140:
+        message_valid = False
+        error_message = f"Viesti on liian pitkä ({len(message)} / 140 merkkiä)"
+
+
+    # Check if new votes have appeared to fill the user's quota. If so, reload the page and force them to vote on them.
+
+    if message_valid and len(Vote._potential_votes(account_id)) != 0:
+        votes_current = True
+        error_message = "Lisää äänestettävää on ilmestynyt"
+        
+
+    if not (message_valid and votes_current):
+        result = {"failure":True, "error_message":error_message}
+        result["votes"] = Vote._ensure_votes(account_id)
+        result["entries"] = Entry._entries_for_votes(result["votes"])
+        db.session.commit()
+        return result
+
+    # If we are here, it means that we can proceed to try to vote and post
+
+    vote_result = Vote._do_vote(account_id, votes_cast)
+
+    if vote_result == None:
+
+        p = Post(account_id, None)
+        db.session.add(p)
+        db.session.commit()
+        e = Entry(p.id, message)
+        db.session.add(e)
+
+        db.session.commit()
+        return {"failure":False}
+    else:
+        result = {"failure":True, "error_message":error_message}
+        result["votes"] = Vote._ensure_votes(account_id)
+        result["entries"] = Entry._entries_for_votes(result["votes"])
+
+        db.session.rollback()
+
+        return result
 
 class Vote(db.Model):
 
@@ -8,7 +62,7 @@ class Vote(db.Model):
 
     id = db.Column(db.Integer, primary_key=True)
     
-    entry_id = db.Column(db.Integer, db.ForeignKey("entry.id"), nullable=False)
+    entry_id = db.Column(db.Integer, db.ForeignKey("entry.id", ondelete="CASCADE"), nullable=False)
     account_id = db.Column(db.Integer, db.ForeignKey("account.id"), nullable=True)
     upvote = db.Column(db.Boolean, nullable=True)
 
@@ -24,14 +78,62 @@ class Vote(db.Model):
         if upvote != None:
             self.upvote = upvote
 
-    # Class method
+    # Tries to apply upvotes
 
-    def find_votes_for(account_id):
+    def _do_vote(account_id, upvotes):
 
-        # Find votes that have already been allocated to the given user and with null upvote
-        # There should never be more than three
+        # Check if all the votes actually are for open votes the user has access to
 
-        votes = Vote.query.filter_by(account_id=account_id, upvote=None).all()
+        for vote in upvotes:
+            if db.session().execute("SELECT COUNT(*) FROM vote WHERE vote.id = :vote AND vote.account_id = :voter", {"voter":account_id, "vote":vote}).first()[0] == 0:
+                return "Kelvottomia ääniä"
+
+        # Apply the upvotes
+
+        for vote in upvotes:
+
+            # Apply upvote
+
+            db.session.execute("UPDATE vote SET upvote = TRUE WHERE vote.id = :vote", {"voter":account_id, "vote":vote})
+
+        
+        # Make NULLs into downvotes
+
+        db.session.execute("UPDATE vote SET upvote = FALSE WHERE vote.account_id = :voter AND vote.upvote IS NULL", {"voter":account_id})
+
+        # Anonymise closed votes (upvotes)
+
+        db.session.execute("UPDATE vote SET account_id = NULL WHERE (SELECT COUNT(*) FROM vote as k WHERE k.upvote = TRUE AND k.entry_id = vote.entry_id GROUP BY k.entry_id) >= 2") 
+
+        # Delete rejected entries (and via cascading, the relevant votes)
+
+        db.session.execute("DELETE FROM entry WHERE (SELECT COUNT(*) FROM vote WHERE vote.entry_id = entry.id AND NOT vote.upvote) >= 2")
+
+        # Delete votes that cascading didn't delete (looking at you, SQLite)
+
+        if not os.environ.get("HEROKU"):
+            db.session.execute("DELETE FROM vote WHERE (SELECT COUNT(*) FROM entry WHERE entry.id = entry_id) = 0")
+
+        
+
+
+    # Doesn't guarantee the maximal set of available votes, guaranteed to be read-only
+    # Guaranteed not to return more than three if used in an otherwise valid transaction
+
+    def lookup_votes_for(account_id):
+
+        return Vote.query.filter_by(account_id=account_id, upvote=None).all()
+
+    def ensure_votes(account_id):
+        votes = Vote._ensure_votes(account_id)
+        entries = Entry._entries_for_votes(votes)
+        db.session.commit()
+        return votes, entries
+
+    # Returns votes that _ensure_votes would insert into the table for a user
+    # Guaranteed not to write, returns transient ORM objects
+
+    def _potential_votes(account_id):
 
         # Fish unreviewed entries
 
@@ -75,27 +177,42 @@ WHERE
     where 
       vote.entry_id = entry.id
   ) < 3
+
+  -- Don't generate votes on entries which have been resolved
+
+  AND (
+    SELECT
+      COUNT(*)
+    FROM
+      vote
+    WHERE
+      vote.entry_id = entry.id
+      AND vote.account_id IS NULL
+  ) = 0
+
   LIMIT
     :needed
 
-  """, {"poster":account_id, "needed":3-len(votes)})
+  """, {"poster":account_id, "needed":3-len(Vote.lookup_votes_for(account_id))})
 
-        new_votes = []
+        votes = []
 
         for row in generated:
-            new_votes.append(Vote(row[0], account_id, None))
-            db.session().add(new_votes[-1])
-        db.session().commit()
+            votes.append(Vote(row[0], account_id, None))
 
-        votes.extend(new_votes)
+        return votes
 
-        # By now we have as many votes as are available, find the texts of the associated entries
+    # Guarantees maximal set of available votes, if they have not yet been allocated, will update database (subsequent commit is needed)
 
-        entries = []
-        for vote in votes:
-            entries.append(Entry.query.filter_by(id=vote.entry_id).first())
+    def _ensure_votes(account_id):
 
-        return votes, entries
+        votes = Vote.query.filter_by(account_id=account_id, upvote=None).all()
+
+        for vote in Vote._potential_votes(account_id):
+            votes.append(vote)
+            db.session().add(votes[-1])
+
+        return votes
 
 
 class Entry(db.Model):
@@ -104,11 +221,19 @@ class Entry(db.Model):
     text = db.Column(db.String(140), nullable=False)
     timestamp = db.Column(db.Integer, nullable=False)
     post = db.relationship("Post", foreign_keys="Entry.post_id")
+    child_votes = db.relationship("Vote", passive_deletes=True, backref="Entry")
 
     def __init__(self, post_id, text):
         self.post_id = post_id
         self.text = text
         self.timestamp = int(time.time())
+
+    def _entries_for_votes(votes):
+        entries = []
+        for vote in votes:
+            entries.append(Entry.query.filter_by(id=vote.entry_id).first())
+
+        return entries
 
 class Post(db.Model):
     id = db.Column(db.Integer, primary_key=True)
