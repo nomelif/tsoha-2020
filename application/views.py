@@ -76,8 +76,11 @@ def newpost():
 
     options = []
     votes, entries = None, None
+    edit = False
 
     if request.method == "GET": # Just return the blank page
+        if request.args.get("post_id") != None:
+            edit = True
         votes, entries = Vote.ensure_votes(account.id) # <- contains commit
         display_page=True
     else:
@@ -92,7 +95,7 @@ def newpost():
     if display_page:
         for vote, entry in zip(votes, entries):
             options.append([vote.id, bleach.clean(entry.text)])
-        return render_template("newpost.html", title="Uusi postaus", user_name=account.user_name, options=options, error_message=error_message, post_content=post_content)
+        return render_template("newpost.html", title="Uusi postaus", user_name=account.user_name, options=options, error_message=error_message, post_content=post_content, edit=edit)
     else: # Redirect to index
         return redirect(url_for("index"))
 

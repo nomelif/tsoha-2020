@@ -3,7 +3,11 @@
 {% block body %}
 
 <form class="main-form" method="post" onSubmit="return captureForm()">
+    {% if not edit %}
     <h3>Uusi postaus</h3>
+    {% else %}
+    <h3>Muokkaa</h3>
+    {% endif %}
     <p id="error_message">
     {% if error_message %}
       {{error_message}}
