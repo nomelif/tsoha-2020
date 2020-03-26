@@ -8,6 +8,14 @@ import markdown
 import bleach
 import jinja2
 
+@app.route("/deleteUser")
+@login_required
+def deleteUser():
+    account_id = current_user.get_id()
+    logout_user()
+    Account.delete_user(account_id)
+    return redirect(url_for("index"))
+
 @app.route("/updateUser", methods=["POST", "GET"])
 @login_required
 def updateUser():

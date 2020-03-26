@@ -333,3 +333,29 @@ class Account(db.Model):
             db.session.execute("UPDATE account SET password_hash = :hash WHERE id = :id", {"hash":bcrypt.hashpw(new_password.encode("utf-8"), bcrypt.gensalt()).decode("utf-8"), "id":account})
         db.session.commit()
 
+    def delete_user(account):
+
+        # Hand-delete all the votes on posts by the user (PostgreSQL cascading should take care of this)
+
+        if not os.environ.get("HEROKU"):
+            db.session.execute("DELETE FROM vote WHERE vote.entry_id IN (SELECT entry.id FROM entry JOIN post on entry.post_id = post.id WHERE post.account_id = :account)", {"account": account})
+
+        # Delete all entries
+
+        db.session.execute("DELETE FROM entry WHERE :account IN (SELECT account_id FROM post WHERE post.id = entry.post_id)", {"account": account})        
+
+        # Anonymise all posts
+
+        db.session.execute("UPDATE post SET account_id = NULL WHERE account_id = :account", {"account": account})
+
+        # Delete all votes
+
+        db.session.execute("DELETE FROM vote WHERE vote.account_id = :account", {"account": account})
+
+        # Physically delete the account
+
+        db.session.execute("DELETE FROM account WHERE id = :account", {"account":account})
+
+        # If this didn't blow up, good riddance
+
+        db.session.commit()
