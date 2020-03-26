@@ -1,13 +1,13 @@
 # Käyttötapauksia
 
-## Tilinhallinta
+## Tilinhallinta ✓
 
 * Käyttäjä tahtoo luoda värkkiin tunnuksen lukeakseen Värkki-viestejä. ✓
 * Käyttäjä tahtoo kirjautua tunnukseen jonka loi. ✓
 * Käyttäjä tahtoo kirjautua ulos, ettei joku muu käyttäisi Värkkiä hänen nimissään. ✓
 * Käyttäjä tahtoo vaihtaa tilinsä näkyvän nimen, kuten Twitterissä tavataan tehdä. ✓
 * Käyttäjä tahtoo vaihtaa tilinsä salasanan, koska kirjoitti sen post-it lapulle ja perheen koira on painanut sen mieleensä. ✓
-* Käyttäjä tahtoo poistaa tilinsä ja kaikki siihen liittyvät tiedot värkistä, koska hänen Värkkiinsä tekemänsä postaukset eivät enää heijasta hänen nykyisiä kantojaan ja saavat hänet vaikuttamaan epäammattimaiselta mahdollisen työnantajan silmissä.
+* Käyttäjä tahtoo poistaa tilinsä ja kaikki siihen liittyvät tiedot värkistä, koska hänen Värkkiinsä tekemänsä postaukset eivät enää heijasta hänen nykyisiä kantojaan ja saavat hänet vaikuttamaan epäammattimaiselta mahdollisen työnantajan silmissä. ✓
 
 ## Viestittely
 

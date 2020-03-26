@@ -27,7 +27,9 @@ Värkkiin voi luoda kirjautunut käyttäjä tunnuksen. Kirjautuneena yläoikeall
 6. Luoda käyttäjä c
 7. Kirjoittaa c:llä viesti ja merkitä a:n kommentti rakentavaksi
 
-Nyt a:n viestin pitäisi näkyä. Viestiä voi muokata vain a:ksi kirjautuneena. Muokkauksien esiin tuleminen vaatii vastaavat kaksi rakentavuusääntä. Viestin poisto on välitön. Jos viestiä on muokattu, poisto palauttaa viestin sen aikaisempaan tilaan.
+Nyt a:n viestin pitäisi näkyä. Viestiä voi muokata vain a:ksi kirjautuneena. __Muokkauksien esiin tuleminen vaatii vastaavat kaksi rakentavuusääntä. Viestin poisto on välitön. Jos viestiä on muokattu, poisto palauttaa viestin sen aikaisempaan tilaan.__
+
+Tiliasetuksiin pääsee oikean ylänurkan rataskuvakkeesta. Sitä kautta voi myös poistaa tilin.
 
 ## Dokumentaation rakenteesta
 
