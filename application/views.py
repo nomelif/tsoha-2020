@@ -8,6 +8,37 @@ import markdown
 import bleach
 import jinja2
 
+@app.route("/updateUser", methods=["POST", "GET"])
+@login_required
+def updateUser():
+    if request.method == "GET":
+        return render_template("edit.html", title="Muokkaa käyttäjää", account=Account.query.filter_by(id=current_user.get_id()).first().user_name)
+    else:
+        new_user_name = request.form.get("account")
+        new_password = request.form.get("password")
+        ok = True
+        error_message = ""
+
+        # Parse Noney values as None = no change to password
+
+        if new_password == "":
+            new_password = None
+
+        if new_password != None and len(new_password) > 0 and len(new_password) < 8:
+            ok = False
+            error_message = "Salasanan pitää olla vähintään kahdeksanmerkkinen"
+        elif new_user_name == None or len(new_user_name) == 0:
+            ok = False
+            error_message = "Käyttäjänimi ei saa olla tyhjä"
+
+        if ok:
+            result = Account.update_account(current_user.get_id(), new_user_name, new_password)
+            if result:
+                return render_template("edit.html", title="Muokkaa käyttäjää", error_message=result)
+            else:
+                return redirect(url_for("index"))
+    
+
 @app.route("/delete/<int:entry_id>")
 @login_required
 def delete(entry_id):

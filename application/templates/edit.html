@@ -1,0 +1,28 @@
+{% extends "layout.html" %}
+
+{% block body %}
+
+<form class="main-form" method="post" onsubmit="return captureForm()">
+    <script>
+
+        function captureForm(){
+            if(ddocument.getElementById("password").value.length > 0 && ocument.getElementById("password").value.length < 8){
+                document.getElementById("error_message").innerHTML = "Salasanan kuuluu olla vähintään kahdeksan merkin pituinen.";
+                return false;
+            }
+            if(document.getElementById("account").value.length == 0){
+                document.getElementById("error_message").innerHTML = "Käyttäjätunnus ei voi olla tyhjä."
+                return false;
+            }
+            return true;
+        }
+
+    </script>
+    <h3>Muokkaa käyttäjää</h3>
+    <p id="error_message">{% if error_message %}{{error_message}}{% endif %}</p>
+    <input id="account" name="account" placeholder="Käyttäjätunnus" value="{{account}}"/>
+    <input id="password" type="password" name="password" placeholder="Salasana (jätä tyhjäksi jos et halua vaihtaa)"/>
+    <input type="submit" value="Päivitä tiedot"/>
+</form>
+
+{% endblock %}

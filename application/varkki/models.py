@@ -320,3 +320,16 @@ class Account(db.Model):
 
     def is_authenticated(self):
         return True
+    
+    def update_account(account, new_user_name, new_password):
+
+        # Check that there isn't already someone else with the given user name (ignore self if no name change happened)
+
+        if db.session.execute("SELECT COUNT(*) FROM account WHERE user_name = :name AND NOT id = :id", {"name":new_user_name, "id":account}).first()[0] != 0:
+            return "Käyttäjänimi on jo varattu"
+
+        db.session.execute("UPDATE account SET user_name = :name WHERE id = :id", {"name":new_user_name, "id":account})
+        if new_password != None:
+            db.session.execute("UPDATE account SET password_hash = :hash WHERE id = :id", {"hash":bcrypt.hashpw(new_password.encode("utf-8"), bcrypt.gensalt()).decode("utf-8"), "id":account})
+        db.session.commit()
+
