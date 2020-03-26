@@ -3,6 +3,10 @@
   src: url(/static/fonts/cmunorm.ttf);
 }
 
+.red{
+  color: red;
+}
+
 body{
   font-family: cmu-roman;
   font-size: 1.5em;

@@ -2,12 +2,15 @@
 
 {% block body %}
 
-<form class="main-form" method="post">
+<form class="main-form" method="post" onSubmit="return captureForm()">
     <h3>Uusi postaus</h3>
+    <p id="error_message">
     {% if error_message %}
-    <p>{{error_message}}</p>
+      {{error_message}}
     {% endif %}
-    <textarea name="message" placeholder="Postauksen sisältö (maksimissaan 140 merkkiä)">{{post_content}}</textarea>
+    </p>
+    <textarea id="message" name="message" onchange="updateCharacterCount()" onkeyup="updateCharacterCount()" placeholder="Postauksen sisältö (maksimissaan 140 merkkiä)">{{post_content}}</textarea>
+    <p id="characters"></p>
     {% for option in options %}
        <div class="postcard">
        {{option[1]|markdown}}
@@ -15,6 +18,33 @@
        </div>
     {% endfor %}
     <input type="submit" value="Lähetä"/>
+    <script>
+
+        // Length here give higher numbers than python for compound characters like the trans flag emoji. (6 vs 5) This way around is OK though.
+
+        function captureForm(){
+            if(document.getElementById("message").value.length == 0){
+                document.getElementById("error_message").innerHTML = "Viestin ei tule olla tyhjä.";
+                return false;
+            }
+            if(document.getElementById("message").value.length > 140){
+                document.getElementById("error_message").innerHTML = "Viesti on liian pitkä (" + document.getElementById("message").value.length + " / 140 merkkiä)";
+                return false;
+            }
+            return true;
+        }
+
+        function updateCharacterCount(){
+            let characterCount = document.getElementById("message").value.length;
+            if(characterCount == 0 || characterCount > 140){
+                document.getElementById("characters").innerHTML = '(<span class="red">' + characterCount + "</span> / 140)";
+            }else{
+                document.getElementById("characters").innerHTML = '(' + characterCount + " / 140)";
+            }
+        }
+        updateCharacterCount();
+
+    </script>
 </form>
 
 {% endblock %}
