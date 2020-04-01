@@ -31,6 +31,8 @@ Nyt a:n viestin pitäisi näkyä. Viestiä voi muokata vain a:ksi kirjautuneena.
 
 Tiliasetuksiin pääsee oikean ylänurkan rataskuvakkeesta. Sitä kautta voi myös poistaa tilin.
 
+Vastausviestin voi luoda vastauskuvakkeella, joka näkyy postauksen vasemmassa alanurkassa. Vastauksia hyväksytään viisi (niitä ei välttämättä näy käyttöliittymässä viittä, sillä osa voi olla moderoimatta) ja niitä voi muokata ja poistaa kuten ylätason postauksia. Vastausviesteihin ei voi vastata. __Vastausviesteistä tulee näkyviä vasta, kun ne ovat saaneet kaksi moderaatioylä-ääntä.__
+
 ## Dokumentaation rakenteesta
 
 Dokumentaatiosta löytyy tiedot Värkin:
