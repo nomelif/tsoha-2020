@@ -8,6 +8,8 @@
        <div class="postcard">
        {{post[0]|markdown}}
 
+       <a href="/newpost?parent_id={{post[1]}}"/><img alt="reply" src="/static/reply.svg"/></a>
+
        {% if account_id == post[2] %}
 
        <a href="/delete/{{post[1]}}"/><img alt="delete" src="/static/delete.svg"/></a>
