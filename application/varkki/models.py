@@ -3,7 +3,7 @@ import bcrypt
 import time
 import os
 
-def submit_post(votes_cast, account_id, message, post_id):
+def submit_post(votes_cast, account_id, message, post_id, reply_id = None):
 
     message_valid = True
     votes_current = True
@@ -38,7 +38,38 @@ def submit_post(votes_cast, account_id, message, post_id):
             if db.session.execute("SELECT COUNT(*) FROM post WHERE id = :post AND account_id = :poster", {"post":post_id, "poster":account_id}).fetchone()[0] != 1:
                 post_valid = False
                 error_message = "Muokattava viesti ei kuulu sinulle"
-        
+    
+    # Check if the new post is a reply. If so, are there a maximum of four (minus this) posts in reply to the parent and is the parent valid (actual post id, not itself a reply)?
+    # Check that a user doesn't try to turn a post into a reply by editing it
+
+    if reply_id != None:
+        try:
+            reply_id = int(reply_id)
+        except:
+            post_valid = False
+            error_message = "Viesti on vastaus epäkelpoon viestiin"
+        else:
+            if db.session.execute("SELECT COUNT(*) FROM post WHERE id = :reply", {"reply":reply_id}).fetchone()[0] != 1:
+                post_valid = False
+                error_message = "Viesti on vastaus epäkelpoon viestiin"
+
+            # None becomes NULL (if post_id is None, that is) and NULL != x for all x.
+
+            elif db.session.execute("SELECT COUNT(*) FROM post WHERE parent_id =:reply AND id != :post", {"reply":reply_id, "post":post_id}).fetchone()[0] > 4:
+                post_valid = False
+                error_message = "Viesti on vastaus jo lukkiutuneeseen viestiin"
+
+            elif db.session.execute("SELECT COUNT(*) FROM post WHERE id = :reply AND parent_id IS NOT NULL", {"reply":reply_id}).fetchone()[0] != 0:
+                post_valid = False
+                error_message = "Vastausviestiin ei voi vastata"
+
+            # Again, None becomes NULL so if the message is not a reply, the condition is false
+            # This check is to avoid someone editing a post into being a reply. (Has stupid consequences like potentially forming arbitrary trees of replies)
+
+            elif db.session.execute("SELECT COUNT(*) FROM post WHERE id = :post AND parent_id IS NULL", {"post":post_id}).fetchone()[0] != 0:
+                post_valid = False
+                error_message = "Viestistä ei voi tehdä vastausviestiä"
+
 
     if not (message_valid and votes_current and post_valid):
         result = {"failure":True, "error_message":error_message}
@@ -54,7 +85,7 @@ def submit_post(votes_cast, account_id, message, post_id):
     if vote_result == None:
 
         if post_id == None:
-            p = Post(account_id, None)
+            p = Post(account_id, reply_id)
             db.session.add(p)
             db.session.commit()
             post_id = p.id
