@@ -327,7 +327,7 @@ ORDER  BY entry.timestamp DESC
         for text, entry_id, account_id, post_id in top_level:
             result.append({"text": text, "entry_id":entry_id, "account_id":account_id, "replies":[], "post_id":post_id})
             replies = db.session.execute("""
-SELECT text, entry.id, post.account_id
+SELECT text, entry.id, post.account_id, post.id
 FROM   post
        INNER JOIN entry
                ON post.id = entry.post_id
@@ -344,8 +344,8 @@ FROM   post
 WHERE  post.parent_id = :parent
 ORDER  BY entry.timestamp DESC  
         """, {"parent": post_id}).fetchall()
-            for reply_text, reply_entry_id, reply_account_id in replies:
-                result[-1]["replies"].append({"text":reply_text, "entry_id":reply_entry_id, "account_id":reply_account_id})
+            for reply_text, reply_entry_id, reply_account_id, reply_post_id in replies:
+                result[-1]["replies"].append({"text":reply_text, "entry_id":reply_entry_id, "account_id":reply_account_id, "post_id":reply_post_id})
         return result
 
 
