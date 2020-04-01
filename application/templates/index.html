@@ -12,7 +12,7 @@
 
        {% if account_id == post["account_id"] %}
 
-       <a href="/delete/{{post["post_id"]}}"/><img alt="delete" src="/static/delete.svg"/></a>
+       <a href="/delete/{{post["entry_id"]}}"/><img alt="delete" src="/static/delete.svg"/></a>
        <a href="/newpost?post_id={{post["post_id"]}}"/><img alt="edit" src="/static/create.svg"/></a>
 
        {% endif %}
@@ -25,7 +25,7 @@
 
        {% if account_id == post["account_id"] %}
 
-       <a href="/delete/{{post["post_id"]}}"/><img alt="delete" src="/static/delete.svg"/></a>
+       <a href="/delete/{{post["entry_id"]}}"/><img alt="delete" src="/static/delete.svg"/></a>
        <a href="/newpost?post_id={{post["post_id"]}}"/><img alt="edit" src="/static/create.svg"/></a>
 
        {% endif %}
