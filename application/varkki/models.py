@@ -304,8 +304,10 @@ class Post(db.Model):
 
     def get_displayable_posts():
 
-        return db.session.execute("""
-SELECT text, entry.id, post.account_id
+        result = []
+
+        top_level = db.session.execute("""
+SELECT text, entry.id, post.account_id, post.id
 FROM   post
        INNER JOIN entry
                ON post.id = entry.post_id
@@ -322,6 +324,30 @@ FROM   post
 WHERE  post.parent_id IS NULL
 ORDER  BY entry.timestamp DESC  
         """).fetchall()
+        for text, entry_id, account_id, post_id in top_level:
+            result.append({"text": text, "entry_id":entry_id, "account_id":account_id, "replies":[], "post_id":post_id})
+            replies = db.session.execute("""
+SELECT text, entry.id, post.account_id
+FROM   post
+       INNER JOIN entry
+               ON post.id = entry.post_id
+       INNER JOIN (SELECT post_id,
+                          Max(timestamp) AS max_timestamp
+                   FROM   entry
+                   WHERE  (SELECT Count(*)
+                           FROM   vote
+                           WHERE  vote.entry_id = entry.id
+                                  AND vote.upvote = true) >= 2
+                   GROUP  BY post_id) AS pid_map
+               ON post.id = pid_map.post_id
+                  AND entry.timestamp = pid_map.max_timestamp
+WHERE  post.parent_id = :parent
+ORDER  BY entry.timestamp DESC  
+        """, {"parent": post_id}).fetchall()
+            for reply_text, reply_entry_id, reply_account_id in replies:
+                result[-1]["replies"].append({"text":reply_text, "entry_id":reply_entry_id, "account_id":reply_account_id})
+        return result
+
 
 class Account(db.Model):
     id = db.Column(db.Integer, primary_key=True)

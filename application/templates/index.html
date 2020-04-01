@@ -6,18 +6,34 @@
 
     {% for post in posts %}
        <div class="postcard">
-       {{post[0]|markdown}}
+       {{post["text"]|markdown}}
 
-       <a href="/newpost?parent_id={{post[1]}}"/><img alt="reply" src="/static/reply.svg"/></a>
+       <a href="/newpost?parent_id={{post["post_id"]}}"/><img alt="reply" src="/static/reply.svg"/></a>
 
-       {% if account_id == post[2] %}
+       {% if account_id == post["account_id"] %}
 
-       <a href="/delete/{{post[1]}}"/><img alt="delete" src="/static/delete.svg"/></a>
-       <a href="/newpost?post_id={{post[1]}}"/><img alt="edit" src="/static/create.svg"/></a>
+       <a href="/delete/{{post["post_id"]}}"/><img alt="delete" src="/static/delete.svg"/></a>
+       <a href="/newpost?post_id={{post["post_id"]}}"/><img alt="edit" src="/static/create.svg"/></a>
 
        {% endif %}
-
        </div>
+
+       {% for post in post["replies"] %}
+       <div class="postcard reply">
+
+       {{post["text"]|markdown}}
+
+       <a href="/newpost?parent_id={{post["post_id"]}}"/><img alt="reply" src="/static/reply.svg"/></a>
+
+       {% if account_id == post["account_id"] %}
+
+       <a href="/delete/{{post["post_id"]}}"/><img alt="delete" src="/static/delete.svg"/></a>
+       <a href="/newpost?post_id={{post["post_id"]}}"/><img alt="edit" src="/static/create.svg"/></a>
+
+       {% endif %}
+       </div>
+       {% endfor %}
+
     {% endfor %}
 
     </div>

@@ -39,6 +39,10 @@ textarea{
   font-family: cmu-roman;
 }
 
+.reply {
+    margin-left: 10%;
+}
+
 .postcard {
   border-style: solid;
   border-width: 1px;
