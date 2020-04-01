@@ -63,6 +63,6 @@ Antti Laaksonen, [17.03.20 14:13]
 Saa tehdä myös omalla tavalla
 ```
 
-* Toteutin tällä viikolla vastaustoiminnallisuuden, väitän siis täydentäneeni toiminnallisuutta. Liiskasin myös [yhden bugin](https://github.com/nomelif/tsoha-2020/commit/b09a85d69552c84a368c52bef05569b8daaa0dee), joka lienee viikon kaksi palautteessa mainitun virhetoiminnan taustalla:
+* Toteutin tällä viikolla vastaustoiminnallisuuden, väitän siis täydentäneeni toiminnallisuutta. Lisäsin myös muutamaan kuvakkeeseen alt-tekstin. Liiskasin myös [yhden bugin](https://github.com/nomelif/tsoha-2020/commit/b09a85d69552c84a368c52bef05569b8daaa0dee), joka lienee viikon kaksi palautteessa mainitun virhetoiminnan taustalla:
 
 > En ole ihan varma, mutta viestiä muokatessa viestin omistaja pystyi merkitsemään oman viestin rakentavaksi, ja toinen henkilö ei nähnyt sitä listassa, mutta kolmas näki...
