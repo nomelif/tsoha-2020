@@ -9,7 +9,7 @@
 * Käyttäjä tahtoo vaihtaa tilinsä salasanan, koska kirjoitti sen post-it lapulle ja perheen koira on painanut sen mieleensä. ✓
 * Käyttäjä tahtoo poistaa tilinsä ja kaikki siihen liittyvät tiedot värkistä, koska hänen Värkkiinsä tekemänsä postaukset eivät enää heijasta hänen nykyisiä kantojaan ja saavat hänet vaikuttamaan epäammattimaiselta mahdollisen työnantajan silmissä. ✓
 
-## Viestittely
+## Viestittely ✓
 
 * Käyttäjä tahtoo luoda värkkiin postauksen, sillä mieleen juolahti jotain, mitä ei kehtaa paikalle kokoontuneille perheen jäsenille sanoa ääneen. ✓
 * Käyttäjä tahtoo muokata postausta, sillä hän huomasi siinä ikävän kirjoitusvirheen. ✓
@@ -18,7 +18,7 @@
 * Käyttäjä tahtoo muokata vastausviestiään, sillä toisen kirjoitusvirheistä valittamisen uskottavuus heikkenee hänen itse tekemiensä näppäilymokien takia. ✓
 * Käyttäjä tahtoo poistaa vastausviestinsä, sillä sen sisältö on hänelle jälkikäteen vastenmielinen ja käynnissä olevan poliisikuulustelun kannalta merkittävää todistusaineistoa. ✓
 
-## Moderaatio
+## Moderaatio ✓
 
 * Käyttäjä haluaa, ettei ihan mitä sattuu roskaa osu nokan eteen. Tämän seurauksena hän suostuu hyväksymään tai hylkäämään postauksia ennen kuin itse näpyttää. ✓
 
