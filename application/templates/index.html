@@ -23,8 +23,6 @@
 
        {{post["text"]|markdown}}
 
-       <a href="/newpost?parent_id={{post["post_id"]}}"/><img alt="reply" src="/static/reply.svg"/></a>
-
        {% if account_id == post["account_id"] %}
 
        <a href="/delete/{{post["post_id"]}}"/><img alt="delete" src="/static/delete.svg"/></a>
