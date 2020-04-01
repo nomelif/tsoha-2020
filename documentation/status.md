@@ -33,3 +33,36 @@ Näiden tilanne on (järjestyksessä):
 * Issuet ovat käsittääkseni päällä.
 * Commitit ovat samaa tasoa kuin ennen.
 * Hoidin tämän jo aikaisempana viikkona.
+
+# Viikko 4
+
+Viikon 4 tavoitteet olivat:
+
+* Sovelluksessa on ainakin kolme tietokantataulua, joista jokainen on käytössä.
+* Sovelluksessa on ainakin yksi monimutkaisempi (SQL-kielellä kirjoitettu) yhteenvetokysely, jonka tulokset näytetään käyttäjälle.
+* Ulkoasun viilaus. Sovelluksessa käytetään Bootstrap-kirjastoa (tai muuta vastaavaa) ulkoasun tyylittelyssä.
+* Toiminnallisuuden täydentäminen.
+
+Näiden tilanne on (järjestyksessä):
+
+* Tämä piti paikkansa jo viikon alussa. Aktiivisessa käytössä olevia tauluja löytyy peräti neljä.
+* Näitä oli jo viime viikon jäljiltä. Hyvähköt esimerkit löytyvät [models.py](../application/varkki/models.py)-tiedoston `get_displayable_posts`-funktiosta.
+* Tässä tein omaa CSSää valmiin kirjaston käyttämisen sijaan. Kysyin tämän luvallisuutta 12:09-14:13 17.3.2020 Telegramissa ja sain oman tulkintani mukaan myöntävän vastauksen:
+
+```
+Theo Friberg, [17.03.20 13:13]
+>  Ulkoasun viilaus. Sovelluksessa käytetään Bootstrap-kirjastoa (tai muuta vastaavaa) ulkoasun tyylittelyssä. 
+
+Eli itse rakkaudella käpistelty minimalistinen CSS ei kelpaa?
+
+Theo Friberg, [17.03.20 13:15]
+Katselin tuota nelososaa: https://materiaalit.github.io/tsoha-20/osa4/
+
+Antti Laaksonen, [17.03.20 14:13]
+[In reply to Theo Friberg]
+Saa tehdä myös omalla tavalla
+```
+
+* Toteutin tällä viikolla vastaustoiminnallisuuden, väitän siis täydentäneeni toiminnallisuutta. Liiskasin myös [yhden bugin](https://github.com/nomelif/tsoha-2020/commit/b09a85d69552c84a368c52bef05569b8daaa0dee), joka lienee viikon kaksi palautteessa mainitun virhetoiminnan taustalla:
+
+> En ole ihan varma, mutta viestiä muokatessa viestin omistaja pystyi merkitsemään oman viestin rakentavaksi, ja toinen henkilö ei nähnyt sitä listassa, mutta kolmas näki...
