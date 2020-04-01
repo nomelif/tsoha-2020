@@ -10,8 +10,8 @@
 
        {% if account_id == post[2] %}
 
-       <a href="/delete/{{post[1]}}"/><img src="/static/delete.svg"/></a>
-       <a href="/newpost?post_id={{post[1]}}"/><img src="/static/create.svg"/></a>
+       <a href="/delete/{{post[1]}}"/><img alt="delete" src="/static/delete.svg"/></a>
+       <a href="/newpost?post_id={{post[1]}}"/><img alt="edit" src="/static/create.svg"/></a>
 
        {% endif %}
 
