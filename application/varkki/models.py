@@ -53,9 +53,9 @@ def submit_post(votes_cast, account_id, message, post_id, reply_id = None):
                 post_valid = False
                 error_message = "Viesti on vastaus epäkelpoon viestiin"
 
-            # None becomes NULL (if post_id is None, that is) and NULL != x for all x.
+            # None becomes NULL (if post_id is None, that is) and NULL != x is FALSE for all x.
 
-            elif db.session.execute("SELECT COUNT(*) FROM post WHERE parent_id =:reply AND id != :post", {"reply":reply_id, "post":post_id}).fetchone()[0] > 4:
+            elif db.session.execute("SELECT COUNT(*) FROM post WHERE parent_id =:reply AND (id != :post OR :post IS NULL)", {"reply":reply_id, "post":post_id}).fetchone()[0] > 4:
                 post_valid = False
                 error_message = "Viesti on vastaus jo lukkiutuneeseen viestiin"
 
@@ -63,7 +63,7 @@ def submit_post(votes_cast, account_id, message, post_id, reply_id = None):
                 post_valid = False
                 error_message = "Vastausviestiin ei voi vastata"
 
-            # Again, None becomes NULL so if the message is not a reply, the condition is false
+            # Again, None becomes NULL. If post_id is None, it's not an edit and id = :post is false.
             # This check is to avoid someone editing a post into being a reply. (Has stupid consequences like potentially forming arbitrary trees of replies)
 
             elif db.session.execute("SELECT COUNT(*) FROM post WHERE id = :post AND parent_id IS NULL", {"post":post_id}).fetchone()[0] != 0:
