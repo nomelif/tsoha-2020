@@ -297,10 +297,10 @@ class Post(db.Model):
     account = db.relationship("Account", foreign_keys="Post.account_id")
     parent = db.relationship("Post", foreign_keys="Post.parent_id")
 
-    def __init__(self, account_id, parent):
+    def __init__(self, account_id, parent_id):
         self.account_id = account_id
-        if parent != None:
-            self.parent = parent
+        if parent_id != None:
+            self.parent_id = parent_id
 
     def get_displayable_posts():
 
