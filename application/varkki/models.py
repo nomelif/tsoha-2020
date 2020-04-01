@@ -199,7 +199,7 @@ WHERE
     FROM
       post
     WHERE
-      post.id = entry.id
+      post.id = entry.post_id
   ) != :poster
 
   -- Don't generate votes if one has been allocated
