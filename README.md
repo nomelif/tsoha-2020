@@ -19,7 +19,7 @@ Värkki elää herokussa [täällä](https://varkki.herokuapp.com/login).
 Värkkiin voi luoda kirjautunut käyttäjä tunnuksen. Kirjautuneena yläoikealla olevaa kynäkuvaketta painamalla voi luoda uuden viestin. Viestiä luodessa sovellus pyytää arvioimaan nollasta kolmeen kommenttia. Viestistä tulee näkyvä vasta kun kaksi muuta käyttäjää on arvioinut sen rakentavaksi. Mikäli kaksi muuta käyttäjää arvioi viestin ei-rakentavaksi, viesti poistetaan kokonaan. Siis jotta etusivulle ilmestyisi mitään, täytyy:
 
 1. Luoda käyttäjä a
-2. Kirjoittaa viesti (yläoikealla oleva kynäkuvake, tukee muuten markdownia)
+2. Kirjoittaa viesti (yläoikealla oleva kynäkuvake, tukee [markdownia](https://github.com/adam-p/markdown-here/wiki/Markdown-Cheatsheet))
 3. Kirjautua ulos (yläoikealla oleva kuvake)
 3. Luoda käyttäjä b
 4. Kirjoittaa b:llä viesti ja merkitä a:n kommentti rakentavaksi
@@ -29,7 +29,7 @@ Värkkiin voi luoda kirjautunut käyttäjä tunnuksen. Kirjautuneena yläoikeall
 
 Nyt a:n viestin pitäisi näkyä. Viestiä voi muokata vain a:ksi kirjautuneena. __Muokkauksien esiin tuleminen vaatii vastaavat kaksi rakentavuusääntä. Viestin poisto on välitön. Jos viestiä on muokattu, poisto palauttaa viestin sen aikaisempaan tilaan.__
 
-Tiliasetuksiin pääsee oikean ylänurkan rataskuvakkeesta. Sitä kautta voi myös poistaa tilin tai ladata kaiken Värkin tiliin liittyen tallentaman tiedon raakatekstinä.
+Tiliasetuksiin pääsee oikean ylänurkan rataskuvakkeesta. Sitä kautta voi myös poistaa tilin tai ladata siihen liittyvät tiedot.
 
 Vastausviestin voi luoda vastauskuvakkeella, joka näkyy postauksen vasemmassa alanurkassa. Vastauksia hyväksytään viisi (niitä ei välttämättä näy käyttöliittymässä viittä, sillä osa voi olla moderoimatta) ja niitä voi muokata ja poistaa kuten ylätason postauksia. Vastausviesteihin ei voi vastata. __Vastausviesteistä tulee näkyviä vasta, kun ne ovat saaneet kaksi moderaatioylä-ääntä.__
 
