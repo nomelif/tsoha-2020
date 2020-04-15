@@ -83,5 +83,5 @@ Näiden tilanne on (järjestyksessä):
 * Kehitin tällä viikolla tilinhallintaominaisuuden, jota olin pitkään kaavaillut. Nyt käyttäjä voi sekä poistaa tietonsa pysyvästi, että ladata kaikki häntä koskevat tallennetut tiedot raakatekstinä.
 * TODO
 
-Lisäksi korjasin viime viikon palautteessa mainitun bugin, joka heitti virhettä kun käyttäjän salasanaksi yritti vaihtaa alle kahdeksanmerkkistä merkkijonoa.
+Lisäksi korjasin viime viikon palautteessa mainitun bugin, joka heitti virhettä kun käyttäjän salasanaksi yritti vaihtaa alle kahdeksanmerkkistä merkkijonoa. Refaktoroin samaan syssyyn noiden validointia.
 
