@@ -8,6 +8,7 @@
 * Käyttäjä tahtoo vaihtaa tilinsä näkyvän nimen, kuten Twitterissä tavataan tehdä. ✓
 * Käyttäjä tahtoo vaihtaa tilinsä salasanan, koska kirjoitti sen post-it lapulle ja perheen koira on painanut sen mieleensä. ✓
 * Käyttäjä tahtoo poistaa tilinsä ja kaikki siihen liittyvät tiedot värkistä, koska hänen Värkkiinsä tekemänsä postaukset eivät enää heijasta hänen nykyisiä kantojaan ja saavat hänet vaikuttamaan epäammattimaiselta mahdollisen työnantajan silmissä. ✓
+* Käyttäjä tahtoo selvittää, mitä kaikkea Värkki hänestä tallentaa. Tähän häntä motivoi yksityisyyden halu. ✓
 
 ## Viestittely ✓
 
