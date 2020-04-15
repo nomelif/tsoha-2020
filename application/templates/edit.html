@@ -14,6 +14,10 @@
                 document.getElementById("error_message").innerHTML = "Käyttäjätunnus ei voi olla tyhjä."
                 return false;
             }
+            if(document.getElementById("account").value.startsWith(" ") || document.getElementById("account").value.endsWith(" ")){
+                document.getElementById("error_message").innerHTML = "Käyttäjätunnus ei voi alkaa tai loppua välillä."
+                return false;
+            }
             return true;
         }
 

@@ -9,6 +9,27 @@ import bleach
 import jinja2
 from datetime import datetime
 
+def validateUserName(user_name):
+    ok = True
+    error_message = ""
+    if user_name == None or len(user_name) == 0:
+        ok = False
+        error_message = "Käyttäjänimi ei saa olla tyhjä"
+    elif user_name.strip() != user_name: # Slightly stronger than the JS validation, affects tabs and newlines
+        ok = False
+        error_message = "Käyttäjänimi ei voi alkaa tai loppua välillä."
+    elif len(user_name) > 20:
+        ok = False
+        error_message = "Käyttäjätunnukselle on 20 merkin pituusraja."
+    return (ok, error_message)
+
+def validatePassword(password, acceptNone = False):
+    if acceptNone and password == None:
+        return (True, "")
+    if password == None or len(password) < 8:
+        return (False, "Salasanalla pituudella on kahdeksan merkin alaraja")
+    return (True, "")
+
 @app.route("/downloadData")
 @login_required
 def downloadData():
@@ -41,12 +62,12 @@ def updateUser():
         if new_password == "":
             new_password = None
 
-        if new_password != None and len(new_password) > 0 and len(new_password) < 8:
+        if not validatePassword(new_password, True)[0]:
             ok = False
-            error_message = "Salasanan pitää olla vähintään kahdeksanmerkkinen"
-        elif new_user_name == None or len(new_user_name) == 0:
+            error_message = validatePassword(new_password, True)[1]
+        elif not validateUserName(new_user_name)[0]:
             ok = False
-            error_message = "Käyttäjänimi ei saa olla tyhjä"
+            error_message = validateUserName(new_user_name)[1]
 
         if ok:
             result = Account.update_account(current_user.get_id(), new_user_name, new_password)
@@ -130,25 +151,31 @@ def login():
     account_name = request.form.get("account")
     password = request.form.get("password")
     if request.form.get("create account") != None:
-        if account_name == None or password == None:
-            return render_template("login.html", title="Kirjaudu Värkkiin", error_message="Käyttäjätunnuksen ja salasanan on saatava arvo.", hide_login=True)
-        if len(password) < 8:
-            return render_template("login.html", title="Kirjaudu Värkkiin", error_message="Salasanan kuuluu olla vähintään kahdeksan merkin pituinen.", hide_login=True)
-        if len(account_name) == 0:
-            return render_template("login.html", title="Kirjaudu Värkkiin", error_message="Käyttäjätunnus ei saa olla tyhjä.", hide_login = True)
-        if len(account_name) > 20:
-            return render_template("login.html", title="Kirjaudu Värkkiin", error_message="Käyttäjätunnukselle on 20 merkin pituusraja.", hide_login=True)
-        try:
-            account = Account(account_name, password)
-            db.session().add(account)
-            db.session().commit()
-            login_user(account)
-            if request.args.get("next") == None:
-                return redirect(url_for("index"))
-            else:
-                return redirect(request.args.get("next"))
-        except sqlalchemy.exc.IntegrityError:
-            return render_template("login.html", title="Kirjaudu Värkkiin", error_message="Käyttäjätunnus on jo käytössä.", hide_login=True)
+        ok = True
+        error_message = ""
+        if not validateUserName(account_name)[0]:
+            ok = False
+            error_message = validateUserName(account_name)[1]
+        elif not validatePassword(password)[0]:
+            ok = False
+            error_message = validatePassword(password)[1]
+
+        if ok:
+            try:
+                account = Account(account_name, password)
+                db.session().add(account)
+                db.session().commit()
+                login_user(account)
+                if request.args.get("next") == None:
+                    return redirect(url_for("index"))
+                else:
+                    return redirect(request.args.get("next"))
+            except sqlalchemy.exc.IntegrityError:
+                ok = False
+                error_message = "Käyttäjätunnus on jo käytössä"
+
+        if not ok:
+            return render_template("login.html", title="Kirjaudu Värkkiin", error_message=error_message, hide_login=True)
     else:
         account = Account.query.filter_by(user_name=request.form.get("account")).first()
         if account == None or password == None or not bcrypt.checkpw(password.encode("utf-8"), account.password_hash.encode("utf-8")):
