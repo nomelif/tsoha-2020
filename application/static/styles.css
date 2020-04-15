@@ -39,14 +39,17 @@ textarea{
   font-family: cmu-roman;
 }
 
-.reply {
-    margin-left: 10%;
-}
-
 .postcard {
   border-style: solid;
   border-width: 1px;
+  margin-top: 5px;
 }
+
+.reply {
+    margin-left: 10%;
+    margin-top: -1px;
+}
+
 
 .postcard > label{
   text-align: center;
