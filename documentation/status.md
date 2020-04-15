@@ -66,3 +66,21 @@ Saa tehdä myös omalla tavalla
 * Toteutin tällä viikolla vastaustoiminnallisuuden, väitän siis täydentäneeni toiminnallisuutta. Lisäsin myös muutamaan kuvakkeeseen alt-tekstin. Liiskasin myös [yhden bugin](https://github.com/nomelif/tsoha-2020/commit/b09a85d69552c84a368c52bef05569b8daaa0dee), joka lienee viikon kaksi palautteessa mainitun virhetoiminnan taustalla:
 
 > En ole ihan varma, mutta viestiä muokatessa viestin omistaja pystyi merkitsemään oman viestin rakentavaksi, ja toinen henkilö ei nähnyt sitä listassa, mutta kolmas näki...
+
+# Viikko 5:
+
+Viikon 5 tavoitteet olivat:
+
+* Autorisointi.
+* Käytettävyyden viilausta.
+* Toiminnallisuuden täydentäminen (uusia ominaisuuksia).
+* Kirjoita työhösi alustava asennusohje ja käyttöohje.
+
+Näiden tilanne on (järjestyksessä):
+
+* Sovelluksessa on ollut autorisointia jo muutaman viikon. Esimerkiksi vain omia viestejä pystyy muokkaamaan ja poistamaan. Ainoastaan oman salasanan vaihtaminen onnistuu, eikä toisen käyttäjänimeä voi muokkata tai tiliä poistaa. Kurssimateriaali määrittelee autorisoinnin näin: "Autorisoinnilla tarkoitetaan varmistusta siitä, että käyttäjällä on oikeus hänen haluamaansa toimintoon." Tulkitsen siis, että sovellus täytti nämä vaatimukset jo ennen tätä viikkoa.
+* TODO
+* Kehitin tällä viikolla tilinhallintaominaisuuden, jota olin pitkään kaavaillut. Nyt käyttäjä voi sekä poistaa tietonsa pysyvästi, että ladata kaikki häntä koskevat tallennetut tiedot raakatekstinä.
+* TODO
+
+
