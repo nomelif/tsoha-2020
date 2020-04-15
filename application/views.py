@@ -54,6 +54,8 @@ def updateUser():
                 return render_template("edit.html", title="Muokkaa käyttäjää", error_message=result)
             else:
                 return redirect(url_for("index"))
+        else:
+            return render_template("edit.html", title="Muokkaa käyttäjää", error_message=error_message)
     
 
 @app.route("/delete/<int:entry_id>")
