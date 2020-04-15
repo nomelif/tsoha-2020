@@ -1,0 +1,65 @@
+Kaikki meidän sinusta tallentamamme tiedot
+==========================================
+
+Henkilötiedot
+-------------
+
+Emme tallenna salasanaasi sellaisenaan, sillä se on tietoturvauhka käyttäjille, jotka uudelleenkäyttävät salasanoja. Vaikka joku pääsisikin käsiksi Värkin tietokantaan, hän ei voisi käyttää saamaansa tietoa toiseen palveluun murtautumiseen.
+
+Sisäisesti Värkki viittaa sinuun keinotekoisella tunnisteluvulla.
+
+Käyttäjänimesi: {{ data["account"].user_name |safe}}
+Salasanasi tiiviste: {{ data["account"].password_hash |safe}}
+Käyttäjäsi uniikki tunnisteluku: {{ data["account"].id }}
+
+Kirjoittamasi teksti
+--------------------
+
+Värkki tallentaa viesteistä koko muokkaushistorian.
+
+{% for post in data["posts"] %}
+
+Viestin tunniste: {{post["id"]}}
+
+{% for entry in post["entries"] %}
+Version tunniste: {{entry["id"]}}
+Kirjoitusajankohta: {{entry["time"]}}
+Ylä-äänet: {{entry["upvotes"]}}
+Alaäänet: {{entry["downvotes"]}}
+{% if post["parent_id"] != None %}Viesti on vastaus viestiin, jonka tunniste on: {{post["parent_id"]}}{% endif %}
+
+{{entry["text"] |safe}}
+{% endfor %}
+{% if post["entries"] == [] %}
+Tästä viestistä ei ole jäljellä mitään versiota. Todennäköisesti kaikki sen versiot on hylätty äänestyksellä. Voi myös olla, että olet poistanut kaikki viestin versiot.
+{% endif %}
+{% endfor %}
+
+Antamasi äänet
+--------------
+
+Värkki anonymisoi annetut äänet silloin kuin jonkin äänestyksen tulos selviää. Jos äänestys menee läpi, äänistä poistetaan tieto siitä, kuka äänen antoi. Jos äänestys ei mene läpi, äänestyksen kohde ja äänet tuhotaan pysyvästi. Lisäksi jos äänestyksen kohde jostakin muusta syystä poistetaan, siihen liittyvät äänet tuhotaan. Alla ovat ne äänet, jotka olet antanut ja jotka voidaan yhdistää sinuun.
+
+Olet antanut seuraavat ylä-äänet:
+
+{% for vote in data["upvotes"] %}
+Äänen tunnus: {{vote["id"]}}
+Äänestetyn viestin versiotunnus: {{vote["entry_id"]}}
+Äänestetyn viestin teksti: {{vote["text"]}}
+{% endfor %}
+
+Olet antanut seuraavat alaäänet:
+
+{% for vote in data["downvotes"] %}
+Äänen tunnus: {{vote["id"]}}
+Äänestetyn viestin versiotunnus: {{vote["entry_id"]}}
+Äänestetyn viestin teksti: {{vote["text"]}}
+{% endfor %}
+
+Viestit, joita sinun odotetaan seuraavan postauksesi yhteydessä äänestävän:
+
+{% for vote in data["nullvotes"] %}
+Äänen tunnus: {{vote["id"]}}
+Äänestetyn viestin versiotunnus: {{vote["entry_id"]}}
+Äänestetyn viestin teksti: {{vote["text"]}}
+{% endfor %}

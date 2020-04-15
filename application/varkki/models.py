@@ -2,6 +2,34 @@ from application import db
 import bcrypt
 import time
 import os
+from datetime import datetime
+
+def data_dump(account_id):
+    data = {}
+    data["account"] = Account.query.filter_by(id=account_id).first()
+    
+    data["posts"] = []
+    for post in Post.query.filter_by(account_id=account_id).all():
+        post_data = {"id": post.id, "parent_id":post.parent_id, "entries":[]}
+        for entry in Entry.query.filter_by(post_id=post.id).all():
+
+            post_data["entries"].append({"id":entry.id, "text":entry.text, "time":datetime.fromtimestamp(entry.timestamp).strftime("%H:%M:%S %d.%m.%Y"), "upvotes":Vote.query.filter_by(entry_id=entry.id, upvote=True).count(), "downvotes":Vote.query.filter_by(entry_id=entry.id, upvote=False).count()})
+        data["posts"].append(post_data)
+
+    data["upvotes"] = []
+    data["downvotes"] = []
+    data["nullvotes"] = []
+
+    for vote in Vote.query.filter_by(account_id=account_id).all():
+        vote_data = {"id":vote.id, "text":Entry.query.filter_by(id=vote.entry_id).first().text, "entry_id": vote.entry_id}
+        if vote.upvote == True:
+            data["upvotes"].append(vote_data)
+        elif vote.upvote == False:
+            data["downvotes"].append(vote_data)
+        else:
+            data["nullvotes"].append(vote_data)
+    return data
+
 
 def submit_post(votes_cast, account_id, message, post_id, reply_id = None):
 

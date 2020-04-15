@@ -1,12 +1,21 @@
 from application import app, db
-from flask import render_template, request, redirect, url_for
-from application.varkki.models import Account, Post, Entry, Vote, submit_post
+from flask import render_template, request, redirect, url_for, make_response
+from application.varkki.models import Account, Post, Entry, Vote, submit_post, data_dump
 from flask_login import login_required, current_user, login_user, logout_user
 import bcrypt
 import sqlalchemy
 import markdown
 import bleach
 import jinja2
+from datetime import datetime
+
+@app.route("/downloadData")
+@login_required
+def downloadData():
+    data = data_dump(current_user.get_id())
+    response = make_response(render_template("datadump.html", data=data), 200)
+    response.mimetype = "text/plain"
+    return response
 
 @app.route("/deleteUser")
 @login_required
