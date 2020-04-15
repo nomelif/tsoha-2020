@@ -81,7 +81,7 @@ Näiden tilanne on (järjestyksessä):
 * Sovelluksessa on ollut autorisointia jo muutaman viikon. Esimerkiksi vain omia viestejä pystyy muokkaamaan ja poistamaan. Ainoastaan oman salasanan vaihtaminen onnistuu, eikä toisen käyttäjänimeä voi muokkata tai tiliä poistaa. Kurssimateriaali määrittelee autorisoinnin näin: "Autorisoinnilla tarkoitetaan varmistusta siitä, että käyttäjällä on oikeus hänen haluamaansa toimintoon." Tulkitsen siis, että sovellus täytti nämä vaatimukset jo ennen tätä viikkoa.
 * Eriytin kirjautumissivun uuden käyttäjän luomiseen tarkoitetusta sivusta. Tästä oli tullut käytettävyyspalautetta viime viikolla.
 * Kehitin tällä viikolla tilinhallintaominaisuuden, jota olin pitkään kaavaillut. Nyt käyttäjä voi sekä poistaa tietonsa pysyvästi, että ladata kaikki häntä koskevat tallennetut tiedot raakatekstinä.
-* TODO
+* README.md-tiedostossa oli jo entuudestaan käyttöohje, jota vähän oikolukaisin. Tulevaisuudessa siitä voisi tehdä sivun itse sovellukseen. Asennusohjetta ei ollut, joten kirjoitin samaan tiedostoon nopeasti lisäkappaleen. Mitään hirveän erikoisia kommervenkkejä siihen ei liity.
 
 Lisäksi korjasin viime viikon palautteessa mainitun bugin, joka heitti virhettä kun käyttäjän salasanaksi yritti vaihtaa alle kahdeksanmerkkistä merkkijonoa. Refaktoroin samaan syssyyn noiden validointia.
 

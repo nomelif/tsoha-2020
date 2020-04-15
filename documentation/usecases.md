@@ -25,5 +25,5 @@
 
 ## Haku ja selaaminen
 
-* Käyttäjä haluaa kuluttaa Värkkipostauksia peiton alta koronakaranteenissa. Hän ei jaksa etsiä mitään erityistä, vaan mikä tahansa tietovirta auttaa vitutuksen turruttamisessa. ✓
+* Käyttäjä haluaa kuluttaa Värkkipostauksia peiton alta koronakaranteenissa. Hän ei jaksa etsiä mitään erityistä, vaan mikä tahansa tietovirta auttaa henkiseen väsymykseen. ✓
 * Käyttäjä tahtoo hakea kotitekoisen käsidesin reseptejä Värkistä avainsanojen perusteella siinä toivossa, että pöpöt nitistyisivät eteerisillä öljyillä ja suitsukkeella.

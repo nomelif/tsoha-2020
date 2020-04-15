@@ -33,6 +33,10 @@ Tiliasetuksiin pääsee oikean ylänurkan rataskuvakkeesta. Sitä kautta voi my�
 
 Vastausviestin voi luoda vastauskuvakkeella, joka näkyy postauksen vasemmassa alanurkassa. Vastauksia hyväksytään viisi (niitä ei välttämättä näy käyttöliittymässä viittä, sillä osa voi olla moderoimatta) ja niitä voi muokata ja poistaa kuten ylätason postauksia. Vastausviesteihin ei voi vastata. __Vastausviesteistä tulee näkyviä vasta, kun ne ovat saaneet kaksi moderaatioylä-ääntä.__
 
+## Asennuksesta
+
+Omalle palvelimelle Värkin saa asennettua kloonaamalla tämän repositorion ja asentamalla `requirements.txt` -tiedostossa mainitut paketit. Helpoiten se käy komennolla `pip install -r requirements.txt`. venv-virtuaaliympäristöllä riippuvuudet asentuvat nätisti paikallisesti. Itse palvelimen saa käynnistymään komennolla `gunicorn --preload --workers 1 application:app` repositorion ylätasolta. Värkki luo itse käyttämänsä sqlite3 -tietokannan.
+
 ## Dokumentaation rakenteesta
 
 Dokumentaatiosta löytyy tiedot Värkin:
