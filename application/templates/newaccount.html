@@ -22,12 +22,11 @@
         }
 
     </script>
-    <h3>Kirjaudu sisään</h3>
+    <h3>Luo tunnus</h3>
     <p id="error_message">{% if error_message %}{{error_message}}{% endif %}</p>
     <input id="account" name="account" placeholder="Käyttäjätunnus"/>
     <input id="password" type="password" name="password" placeholder="Salasana"/>
-    <input type="submit" value="Kirjaudu sisään"/>
-    <p>Eikö sinulla ole tunnusta? <a href="/newaccount">Luo tunnus</a></p>
+    <input name="create account" type="submit" value="Luo tunnus"/>
 </form>
 
 {% endblock %}

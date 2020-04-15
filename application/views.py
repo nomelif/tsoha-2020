@@ -136,6 +136,38 @@ def logout():
     logout_user()
     return redirect(url_for("index"))
 
+@app.route("/newaccount", methods=["POST", "GET"])
+def newaccount():
+    if current_user.is_authenticated:
+        return redirect(url_for("index"))
+
+    if request.method == "GET":
+        return render_template("newaccount.html", title="Luo tunnus")
+
+    account_name = request.form.get("account")
+    password = request.form.get("password")
+
+    ok = True
+    error_message = ""
+    if not validateUserName(account_name)[0]:
+        ok = False
+        error_message = validateUserName(account_name)[1]
+    elif not validatePassword(password)[0]:
+        ok = False
+        error_message = validatePassword(password)[1]
+    if ok:
+        try:
+            account = Account(account_name, password)
+            db.session().add(account)
+            db.session().commit()
+            login_user(account)
+            return redirect(url_for("index"))
+        except sqlalchemy.exc.IntegrityError:
+            ok = False
+            error_message = "Käyttäjätunnus on jo käytössä"
+    if not ok:
+        return render_template("newaccount.html", title="Kirjaudu Värkkiin", error_message=error_message)
+
 @app.route("/login", methods=["POST", "GET"])
 def login():
 
@@ -150,39 +182,12 @@ def login():
 
     account_name = request.form.get("account")
     password = request.form.get("password")
-    if request.form.get("create account") != None:
-        ok = True
-        error_message = ""
-        if not validateUserName(account_name)[0]:
-            ok = False
-            error_message = validateUserName(account_name)[1]
-        elif not validatePassword(password)[0]:
-            ok = False
-            error_message = validatePassword(password)[1]
-
-        if ok:
-            try:
-                account = Account(account_name, password)
-                db.session().add(account)
-                db.session().commit()
-                login_user(account)
-                if request.args.get("next") == None:
-                    return redirect(url_for("index"))
-                else:
-                    return redirect(request.args.get("next"))
-            except sqlalchemy.exc.IntegrityError:
-                ok = False
-                error_message = "Käyttäjätunnus on jo käytössä"
-
-        if not ok:
-            return render_template("login.html", title="Kirjaudu Värkkiin", error_message=error_message, hide_login=True)
+    account = Account.query.filter_by(user_name=request.form.get("account")).first()
+    if account == None or password == None or not bcrypt.checkpw(password.encode("utf-8"), account.password_hash.encode("utf-8")):
+        return render_template("login.html", title="Kirjaudu sisään", error_message="Käyttäjätunnus ja salasana eivät täsmää.")
     else:
-        account = Account.query.filter_by(user_name=request.form.get("account")).first()
-        if account == None or password == None or not bcrypt.checkpw(password.encode("utf-8"), account.password_hash.encode("utf-8")):
-            return render_template("login.html", title="Kirjaudu sisään", error_message="Käyttäjätunnus ja salasana eivät täsmää.", hide_signup=True)
+        login_user(account)
+        if request.args.get("next") == None:
+            return redirect(url_for("index"))
         else:
-            login_user(account)
-            if request.args.get("next") == None:
-                return redirect(url_for("index"))
-            else:
-                return redirect(request.args.get("next"))
+            return redirect(request.args.get("next"))
