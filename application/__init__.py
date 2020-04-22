@@ -29,6 +29,8 @@ from application.varkki import account
 from application.varkki import entry
 from application.varkki import post
 from application.varkki import vote
+from application.varkki import hashtag
+from application.varkki import hashtag_link
 
 from application.varkki.account import Account
 from os import urandom
