@@ -37,6 +37,16 @@ Table vote {
   upvote BOOLEAN
 }
 
+Table hashtag {
+  id INTEGER [pk]
+  text VARCHAR(140)
+}
+
+Table hashtag_link {
+  id INTEGER [pk]
+  entry_id INTEGER [ref: > entry.id]
+  hashtag_id INTEGER [ref: > hashtag.id]
+}
 
 -->
 
