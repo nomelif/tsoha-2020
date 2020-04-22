@@ -13,7 +13,7 @@ Sovellukseen kuuluu alustavasti tietokantatauluja kirjoituksille, moderaatiota v
 <!--
 
 Table account {
-  id INTEGEGER [pk]
+  id INTEGER [pk]
   user_name VARCHAR(20)
   password_hash CHAR(60)
 }
