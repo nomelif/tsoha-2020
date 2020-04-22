@@ -10,7 +10,10 @@
 
         {% if user_name %}
 
-        <header style="text-align: right;">
+        <header style="text-align: right; height: 3em;">
+            {% if index %}
+            <form style="position: absolute; margin-left: 33.333%; width: 33.333%; display: flex; flex-direction: row;" action="/"><input name="tag" style="display: block; width: 80%;"/><input type=submit style="display: block;" value="Hae hakusanalla"></form>
+            {% endif %}
             <a href="/newpost"><img src="/static/create.svg" style="margin-bottom: -5px"/></a>
             &nbsp; | &nbsp;
             <a href="/updateUser"><img src="/static/settings.svg" style="margin-bottom: -5px"/></a>

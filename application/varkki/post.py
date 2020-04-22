@@ -118,11 +118,14 @@ class Post(db.Model):
         if parent_id != None:
             self.parent_id = parent_id
 
-    def get_displayable_posts():
+    def get_displayable_posts(tag=None):
 
         result = []
 
-        top_level = db.session.execute("""
+        top_level = []
+
+        if tag == None:
+            top_level = db.session.execute("""
 SELECT text, entry.id, post.account_id, post.id
 FROM   post
        INNER JOIN entry
@@ -140,6 +143,26 @@ FROM   post
 WHERE  post.parent_id IS NULL
 ORDER  BY entry.timestamp DESC  
         """).fetchall()
+        elif db.session.execute("SELECT count(*) FROM hashtag WHERE text = :tag", {"tag": tag}).first()[0] == 1:
+            top_level = db.session.execute("""
+SELECT text, entry.id, post.account_id, post.id
+FROM   post
+       INNER JOIN entry
+               ON post.id = entry.post_id
+       INNER JOIN (SELECT post_id,
+                          Max(timestamp) AS max_timestamp
+                   FROM   entry
+                   WHERE  (SELECT Count(*)
+                           FROM   vote
+                           WHERE  vote.entry_id = entry.id
+                                  AND vote.upvote = true) >= 2
+                   GROUP  BY post_id) AS pid_map
+               ON post.id = pid_map.post_id
+                  AND entry.timestamp = pid_map.max_timestamp
+WHERE  post.parent_id IS NULL
+       AND (SELECT Count(*) FROM hashtag_link WHERE entry_id = entry.id AND hashtag_id = (SELECT id FROM hashtag WHERE hashtag.text = :tag)) > 0
+ORDER  BY entry.timestamp DESC  
+        """, {"tag": tag}).fetchall()
         for text, entry_id, account_id, post_id in top_level:
             result.append({"text": text, "entry_id":entry_id, "account_id":account_id, "replies":[], "post_id":post_id})
             replies = db.session.execute("""
