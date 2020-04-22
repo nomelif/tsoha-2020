@@ -1,6 +1,9 @@
 from application import app, db
 from flask import render_template, request, redirect, url_for, make_response
-from application.varkki.models import Account, Post, Entry, Vote, submit_post, data_dump
+from application.varkki.account import Account, data_dump
+from application.varkki.post import Post, submit_post
+from application.varkki.entry import Entry
+from application.varkki.vote import Vote
 from flask_login import login_required, current_user, login_user, logout_user
 import bcrypt
 import sqlalchemy

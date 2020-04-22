@@ -1,0 +1,164 @@
+from application import db
+
+from application.varkki.entry import Entry
+from application.varkki.vote import Vote
+
+def submit_post(votes_cast, account_id, message, post_id, reply_id = None):
+
+    message_valid = True
+    votes_current = True
+    post_valid = True
+    error_message = None
+
+    # Check validity of message
+
+    if message == None or message == "":
+        message_valid = False
+        error_message = "Viestin ei tule olla tyhjä"
+    elif len(message) > 140:
+        message_valid = False
+        error_message = f"Viesti on liian pitkä ({len(message)} / 140 merkkiä)"
+
+
+    # Check if new votes have appeared to fill the user's quota. If so, reload the page and force them to vote on them.
+
+    if message_valid and len(Vote._potential_votes(account_id)) != 0:
+        votes_current = True
+        error_message = "Lisää äänestettävää on ilmestynyt"
+
+    # Check if the new post is an edit. If so, is the post_id valid and belonging to the right user?
+
+    if post_id != None:
+        try:
+            post_id = int(post_id)
+        except:
+            post_valid = False
+            error_message = "Muokattava viesti epäkelpo"
+        else:
+            if db.session.execute("SELECT COUNT(*) FROM post WHERE id = :post AND account_id = :poster", {"post":post_id, "poster":account_id}).fetchone()[0] != 1:
+                post_valid = False
+                error_message = "Muokattava viesti ei kuulu sinulle"
+    
+    # Check if the new post is a reply. If so, are there a maximum of four (minus this) posts in reply to the parent and is the parent valid (actual post id, not itself a reply)?
+    # Check that a user doesn't try to turn a post into a reply by editing it
+
+    if reply_id != None:
+        try:
+            reply_id = int(reply_id)
+        except:
+            post_valid = False
+            error_message = "Viesti on vastaus epäkelpoon viestiin"
+        else:
+            if db.session.execute("SELECT COUNT(*) FROM post WHERE id = :reply", {"reply":reply_id}).fetchone()[0] != 1:
+                post_valid = False
+                error_message = "Viesti on vastaus epäkelpoon viestiin"
+
+            # None becomes NULL (if post_id is None, that is) and NULL != x is FALSE for all x.
+
+            elif db.session.execute("SELECT COUNT(*) FROM post WHERE parent_id =:reply AND (id != :post OR :post IS NULL)", {"reply":reply_id, "post":post_id}).fetchone()[0] > 4:
+                post_valid = False
+                error_message = "Viesti on vastaus jo lukkiutuneeseen viestiin"
+
+            elif db.session.execute("SELECT COUNT(*) FROM post WHERE id = :reply AND parent_id IS NOT NULL", {"reply":reply_id}).fetchone()[0] != 0:
+                post_valid = False
+                error_message = "Vastausviestiin ei voi vastata"
+
+            # Again, None becomes NULL. If post_id is None, it's not an edit and id = :post is false.
+            # This check is to avoid someone editing a post into being a reply. (Has stupid consequences like potentially forming arbitrary trees of replies)
+
+            elif db.session.execute("SELECT COUNT(*) FROM post WHERE id = :post AND parent_id IS NULL", {"post":post_id}).fetchone()[0] != 0:
+                post_valid = False
+                error_message = "Viestistä ei voi tehdä vastausviestiä"
+
+
+    if not (message_valid and votes_current and post_valid):
+        result = {"failure":True, "error_message":error_message}
+        result["votes"] = Vote._ensure_votes(account_id)
+        result["entries"] = Entry._entries_for_votes(result["votes"])
+        db.session.commit()
+        return result
+
+    # If we are here, it means that we can proceed to try to vote and post
+
+    vote_result = Vote._do_vote(account_id, votes_cast)
+
+    if vote_result == None:
+
+        if post_id == None:
+            p = Post(account_id, reply_id)
+            db.session.add(p)
+            db.session.commit()
+            post_id = p.id
+        e = Entry(post_id, message)
+        db.session.add(e)
+
+        db.session.commit()
+        return {"failure":False}
+    else:
+        result = {"failure":True, "error_message":error_message}
+        result["votes"] = Vote._ensure_votes(account_id)
+        result["entries"] = Entry._entries_for_votes(result["votes"])
+
+        db.session.rollback()
+
+        return result
+
+
+class Post(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    account_id = db.Column(db.Integer, db.ForeignKey("account.id"), nullable=True)
+    parent_id = db.Column(db.Integer, db.ForeignKey("post.id"), nullable=True)
+
+    account = db.relationship("Account", foreign_keys="Post.account_id")
+    parent = db.relationship("Post", foreign_keys="Post.parent_id")
+
+    def __init__(self, account_id, parent_id):
+        self.account_id = account_id
+        if parent_id != None:
+            self.parent_id = parent_id
+
+    def get_displayable_posts():
+
+        result = []
+
+        top_level = db.session.execute("""
+SELECT text, entry.id, post.account_id, post.id
+FROM   post
+       INNER JOIN entry
+               ON post.id = entry.post_id
+       INNER JOIN (SELECT post_id,
+                          Max(timestamp) AS max_timestamp
+                   FROM   entry
+                   WHERE  (SELECT Count(*)
+                           FROM   vote
+                           WHERE  vote.entry_id = entry.id
+                                  AND vote.upvote = true) >= 2
+                   GROUP  BY post_id) AS pid_map
+               ON post.id = pid_map.post_id
+                  AND entry.timestamp = pid_map.max_timestamp
+WHERE  post.parent_id IS NULL
+ORDER  BY entry.timestamp DESC  
+        """).fetchall()
+        for text, entry_id, account_id, post_id in top_level:
+            result.append({"text": text, "entry_id":entry_id, "account_id":account_id, "replies":[], "post_id":post_id})
+            replies = db.session.execute("""
+SELECT text, entry.id, post.account_id, post.id
+FROM   post
+       INNER JOIN entry
+               ON post.id = entry.post_id
+       INNER JOIN (SELECT post_id,
+                          Max(timestamp) AS max_timestamp
+                   FROM   entry
+                   WHERE  (SELECT Count(*)
+                           FROM   vote
+                           WHERE  vote.entry_id = entry.id
+                                  AND vote.upvote = true) >= 2
+                   GROUP  BY post_id) AS pid_map
+               ON post.id = pid_map.post_id
+                  AND entry.timestamp = pid_map.max_timestamp
+WHERE  post.parent_id = :parent
+ORDER  BY entry.timestamp DESC  
+        """, {"parent": post_id}).fetchall()
+            for reply_text, reply_entry_id, reply_account_id, reply_post_id in replies:
+                result[-1]["replies"].append({"text":reply_text, "entry_id":reply_entry_id, "account_id":reply_account_id, "post_id":reply_post_id})
+        return result
