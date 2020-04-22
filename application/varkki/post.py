@@ -2,6 +2,7 @@ from application import db
 
 from application.varkki.entry import Entry
 from application.varkki.vote import Vote
+from application.varkki.hashtag import insert_tags
 
 def submit_post(votes_cast, account_id, message, post_id, reply_id = None):
 
@@ -91,8 +92,8 @@ def submit_post(votes_cast, account_id, message, post_id, reply_id = None):
             post_id = p.id
         e = Entry(post_id, message)
         db.session.add(e)
-
         db.session.commit()
+        insert_tags(e)
         return {"failure":False}
     else:
         result = {"failure":True, "error_message":error_message}
