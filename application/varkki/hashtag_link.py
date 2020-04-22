@@ -2,8 +2,6 @@ from application import db
 import time
 import os
 
-from application.varkki.entry import Entry
-
 class HashtagLink(db.Model):
 
     # This seems unavoidable. Oof.
