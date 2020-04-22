@@ -1,12 +1,6 @@
 # Tietokantarakenne
 
-## Nykytila
-
-Sovellukseen on toteutettu kaikki alla mainitut taulut lukuun ottamatta mahdollista hakusanataulua.
-
-## Tämän hetkinen suunnitelma
-
-Sovellukseen kuuluu alustavasti tietokantatauluja kirjoituksille, moderaatiota varten ja käyttäjille. Käyttäjille ja kirjoituksille on tarjolla täysi crud-toiminnallisuus. Tietokanta on myös suunniteltu niin, että siitä voidaan poistaa käyttäjän tiedot kokonaan tietosuojan nimissä.
+Sovellukseen on toteutettu kaikki alla mainitut taulut. Sovellukseen kuuluu tietokantatauluja kirjoituksille, moderaatiota varten ja käyttäjille. Käyttäjille ja kirjoituksille on tarjolla crud-toiminnallisuus. (Aivan kaikkia tietokohteita ei voi päivittää, mutta tiettyihin yksittäisiin tauluihin on täysi crud. Tämä kumpuaa siitä, että poistamalla tietyt tiedot voisi käyttäjä vaikuttaa muiden käyttökokemukseen ikävällä tavalla.) Tietokanta on myös suunniteltu niin, että siitä voidaan poistaa käyttäjän tiedot kokonaan tietosuojan nimissä.
 
 ![](tietokantadiagrammi.png)
 
