@@ -6,4 +6,4 @@ class Hashtag(db.Model):
     text = db.Column(db.String(140), nullable=False, unique=True)
 
     def __init__(self, text):
-        seld.text = text
+        self.text = text
