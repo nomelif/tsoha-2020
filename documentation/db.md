@@ -40,7 +40,7 @@ Table vote {
 
 -->
 
-```
+```sql
 
 
 /* Käyttäjätietokanta sisältää jokaista käyttäjää kohden tunnuksen ja bcryptin läpi käytetyn salasanan tiivisteen. Tunnus on muutettavissa, joten käyttäjän uniikki tunniste on keinotekoinen primääriavain.
