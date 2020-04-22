@@ -40,3 +40,5 @@ def insert_tags(entry):
         db.session().add(HashtagLink(entry.id, tag.id))
     db.session.commit()
 
+def delete_orphans():
+    db.session.execute("DELETE FROM hashtag WHERE (SELECT COUNT(*) FROM hashtag_link WHERE hashtag_id = hashtag.id) = 0")

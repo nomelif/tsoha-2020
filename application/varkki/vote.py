@@ -2,7 +2,7 @@ from application import db
 import time
 import os
 
-from application.varkki.entry import Entry
+from application.varkki.entry import Entry, delete_entry
 
 class Vote(db.Model):
 
@@ -53,15 +53,10 @@ class Vote(db.Model):
 
         db.session.execute("UPDATE vote SET account_id = NULL WHERE (SELECT COUNT(*) FROM vote as k WHERE k.upvote = TRUE AND k.entry_id = vote.entry_id GROUP BY k.entry_id) >= 2") 
 
-        # Delete rejected entries (and via cascading, the relevant votes)
+        # Delete rejected entries
 
-        db.session.execute("DELETE FROM entry WHERE (SELECT COUNT(*) FROM vote WHERE vote.entry_id = entry.id AND NOT vote.upvote) >= 2")
-
-        # Delete votes that cascading didn't delete (looking at you, SQLite)
-
-        if not os.environ.get("HEROKU"):
-            db.session.execute("DELETE FROM vote WHERE (SELECT COUNT(*) FROM entry WHERE entry.id = entry_id) = 0")
-
+        for entry_id in db.session.execute("SELECT id FROM entry WHERE (SELECT COUNT(*) FROM vote WHERE vote.entry_id = entry.id AND NOT vote.upvote) >= 2"):
+            delete_entry(entry_id[0], None, True) # Also deletes hashtags and votes
         
 
 

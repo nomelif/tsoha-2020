@@ -3,7 +3,7 @@ import bcrypt
 import os
 from datetime import datetime
 
-from application.varkki.entry import Entry
+from application.varkki.entry import Entry, delete_entry
 from application.varkki.post import Post
 from application.varkki.vote import Vote
 
@@ -83,7 +83,8 @@ class Account(db.Model):
 
         # Delete all entries
 
-        db.session.execute("DELETE FROM entry WHERE :account IN (SELECT account_id FROM post WHERE post.id = entry.post_id)", {"account": account})        
+        for entry_id in db.session.execute("SELECT id FROM entry WHERE (SELECT account_id FROM post WHERE post.id = entry.post_id) = :account", {"account": account}):
+            delete_entry(entry_id[0], account)
 
         # Anonymise all posts
 

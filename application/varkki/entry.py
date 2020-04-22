@@ -4,6 +4,8 @@ import time
 import os
 from datetime import datetime
 
+from application.varkki.hashtag import delete_orphans
+
 class Entry(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     post_id = db.Column(db.Integer, db.ForeignKey("post.id"), nullable=False)
@@ -24,10 +26,12 @@ class Entry(db.Model):
 
         return entries
 
-    def delete_entry(entry_id, account_id):
-        if db.session.execute("SELECT COUNT(*) FROM entry WHERE (SELECT post.account_id FROM post WHERE post.id = entry.post_id) = :deleter AND id = :entry", {"deleter":account_id, "entry":entry_id}).fetchone()[0] == 1:
-            db.session.execute("DELETE FROM entry WHERE id = :entry", {"entry": entry_id})
+def delete_entry(entry_id, account_id, skip_account_check=False):
+    if skip_account_check or db.session.execute("SELECT COUNT(*) FROM entry WHERE (SELECT post.account_id FROM post WHERE post.id = entry.post_id) = :deleter AND id = :entry", {"deleter":account_id, "entry":entry_id}).fetchone()[0] == 1:
 
-            if not os.environ.get("HEROKU"):
-                db.session.execute("DELETE FROM vote WHERE entry_id = :entry", {"entry": entry_id})
+        db.session.execute("DELETE FROM hashtag_link WHERE entry_id = :entry", {"entry": entry_id})
+        delete_orphans()
+        db.session.execute("DELETE FROM entry WHERE id = :entry", {"entry": entry_id})
 
+        if not os.environ.get("HEROKU"):
+            db.session.execute("DELETE FROM vote WHERE entry_id = :entry", {"entry": entry_id})

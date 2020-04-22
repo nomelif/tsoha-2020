@@ -2,7 +2,7 @@ from application import app, db
 from flask import render_template, request, redirect, url_for, make_response
 from application.varkki.account import Account, data_dump
 from application.varkki.post import Post, submit_post
-from application.varkki.entry import Entry
+from application.varkki.entry import Entry, delete_entry
 from application.varkki.vote import Vote
 from flask_login import login_required, current_user, login_user, logout_user
 import bcrypt
@@ -85,7 +85,7 @@ def updateUser():
 @app.route("/delete/<int:entry_id>")
 @login_required
 def delete(entry_id):
-    Entry.delete_entry(entry_id, current_user.get_id())
+    delete_entry(entry_id, current_user.get_id())
     db.session.commit()
     return redirect(url_for("index"))
 
