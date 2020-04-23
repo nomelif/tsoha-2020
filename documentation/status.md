@@ -85,3 +85,20 @@ Näiden tilanne on (järjestyksessä):
 
 Lisäksi korjasin viime viikon palautteessa mainitun bugin, joka heitti virhettä kun käyttäjän salasanaksi yritti vaihtaa alle kahdeksanmerkkistä merkkijonoa. Refaktoroin samaan syssyyn noiden validointia.
 
+# Viikko 6:
+
+Viikon 6 tavoitteet olivat:
+
+* Toiminnallisuuden täydentäminen
+* Ulkoasun, käytettävyyden ja toiminnallisuuden viilausta
+* Tarvittaessa päivitä jo tehtyjä dokumentaation osia
+* Aloita puuttuvan dokumentaation kirjoittaminen
+* Koodikatselmointi
+
+Näiden tilanne on (järjestyksessä)
+
+* Toteutin avainsanahaun. Nyt jokainen käyttötapaus on toteutettu ja sainpahan vielä sen monesta moneen -suhteen aikaan.
+* Mielestäni käytettävyystilanne oli jo kohtuullinen ennen tätä viikkoa. Nyt kun kaikki perustoiminnallisuudet ovat kunnossa niin voinen ensi viikolla panostaa kaiken yhteen skulaamiseen ja sovelluksen sisäiseen dokumentaatioon.
+* Dokumentaatio piti pitkälti paikkansa.
+* Kirjoitin nyt pitkälti kaiken sen dokumentaation mitä pyydettiin.
+* Koodikatselmoin
