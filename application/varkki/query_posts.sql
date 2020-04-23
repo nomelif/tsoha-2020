@@ -18,7 +18,7 @@ WITH accepted_entry AS
         WHERE NOT :has_tags
               OR (SELECT COUNT(*) FROM hashtag_link WHERE
             entry_id = current_accepted_entry.id
-            AND hashtag_id = (SELECT hashtag.id
+            AND hashtag_id IN (SELECT hashtag.id
                               FROM hashtag
                               WHERE hashtag.text IN :tags)) > 0
     ), hashtagged_parent AS
