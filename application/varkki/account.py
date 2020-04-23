@@ -76,11 +76,6 @@ class Account(db.Model):
 
     def delete_user(account):
 
-        # Hand-delete all the votes on posts by the user (PostgreSQL cascading should take care of this)
-
-        if not os.environ.get("HEROKU"):
-            db.session.execute("DELETE FROM vote WHERE vote.entry_id IN (SELECT entry.id FROM entry JOIN post on entry.post_id = post.id WHERE post.account_id = :account)", {"account": account})
-
         # Delete all entries
 
         for entry_id in db.session.execute("SELECT id FROM entry WHERE (SELECT account_id FROM post WHERE post.id = entry.post_id) = :account", {"account": account}):
