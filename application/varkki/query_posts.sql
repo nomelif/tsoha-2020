@@ -1,3 +1,4 @@
+
 WITH accepted_entry AS
     (
         SELECT text, timestamp, id, post_id FROM entry
@@ -14,11 +15,12 @@ WITH accepted_entry AS
     (
         SELECT post_id as id, (SELECT parent_id FROM post WHERE post.id = post_id) as parent_id
         FROM current_accepted_entry
-        WHERE (SELECT COUNT(*) FROM hashtag_link WHERE
+        WHERE NOT :has_tags
+              OR (SELECT COUNT(*) FROM hashtag_link WHERE
             entry_id = current_accepted_entry.id
             AND hashtag_id = (SELECT hashtag.id
                               FROM hashtag
-                              WHERE hashtag.text = :tag)) > 0
+                              WHERE hashtag.text IN :tags)) > 0
     ), hashtagged_parent AS
     (
         SELECT DISTINCT COALESCE(parent_id, id, parent_id) as id
