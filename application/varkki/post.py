@@ -158,6 +158,9 @@ ON current_accepted_entry.post_id = hashtagged_parent.id
 ORDER BY current_accepted_entry.timestamp DESC
         """
         params = {"tags": tags, "has_tags": len(tags) > 0}
+        # SQLalchemy screws PostresSQL up if tags is an empty list
+        if tags == []:
+            params["tags"] = [""]
         t = sqlalchemy.text(sql_tmpl)
         t = t.bindparams(sqlalchemy.bindparam("tags", expanding=True))
         top_level = db.session.execute(t, params)
