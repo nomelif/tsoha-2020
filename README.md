@@ -33,7 +33,7 @@ Tiliasetuksiin pääsee oikean ylänurkan rataskuvakkeesta. Sitä kautta voi my�
 
 Vastausviestin voi luoda vastauskuvakkeella, joka näkyy postauksen vasemmassa alanurkassa. Vastauksia hyväksytään viisi (niitä ei välttämättä näy käyttöliittymässä viittä, sillä osa voi olla moderoimatta) ja niitä voi muokata ja poistaa kuten ylätason postauksia. Vastausviesteihin ei voi vastata. __Vastausviesteistä tulee näkyviä vasta, kun ne ovat saaneet kaksi moderaatioylä-ääntä.__
 
-Viesteihin voi lisätä risuaidalla merkittyjä #hakusanoja. Jotakin hakusanaa sisältäviä ylätason viestejä voi selata hakutoiminnolla.
+Viesteihin voi lisätä risuaidalla merkittyjä #hakusanoja. Jotakin hakusanaa sisältäviä ylätason viestejä voi selata hakutoiminnolla. Hakusanat voi hakukentässä erottaa välein.
 
 ## Asennuksesta
 
