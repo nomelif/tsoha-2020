@@ -165,7 +165,7 @@ WITH accepted_entry AS
             entry_id = current_accepted_entry.id
             AND hashtag_id = (SELECT hashtag.id
                               FROM hashtag
-                              WHERE hashtag.text = :tag))
+                              WHERE hashtag.text = :tag)) > 0
     ), hashtagged_parent AS
     (
         SELECT DISTINCT COALESCE(parent_id, id, parent_id) as id
