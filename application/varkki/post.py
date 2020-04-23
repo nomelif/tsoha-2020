@@ -145,23 +145,32 @@ ORDER  BY entry.timestamp DESC
         """).fetchall()
         elif db.session.execute("SELECT count(*) FROM hashtag WHERE text = :tag", {"tag": tag}).first()[0] == 1:
             top_level = db.session.execute("""
-SELECT text, entry.id, post.account_id, post.id
-FROM   post
-       INNER JOIN entry
-               ON post.id = entry.post_id
-       INNER JOIN (SELECT post_id,
-                          Max(timestamp) AS max_timestamp
-                   FROM   entry
-                   WHERE  (SELECT Count(*)
-                           FROM   vote
-                           WHERE  vote.entry_id = entry.id
-                                  AND vote.upvote = true) >= 2
-                   GROUP  BY post_id) AS pid_map
-               ON post.id = pid_map.post_id
-                  AND entry.timestamp = pid_map.max_timestamp
-WHERE  post.parent_id IS NULL
-       AND (SELECT Count(*) FROM hashtag_link WHERE entry_id = entry.id AND hashtag_id = (SELECT id FROM hashtag WHERE hashtag.text = :tag)) > 0
-ORDER  BY entry.timestamp DESC  
+WITH accepted_entry AS
+    (
+        SELECT text, timestamp, id, post_id FROM entry
+        WHERE (SELECT COUNT(*) FROM vote WHERE
+            upvote = true
+            AND entry_id = entry.id) >= 2
+        GROUP BY post_id
+        ORDER BY timestamp DESC
+    ), hashtagged_post AS
+    (
+        SELECT post_id as id, (SELECT parent_id FROM post WHERE post.id = post_id) as parent_id
+        FROM accepted_entry
+        WHERE (SELECT COUNT(*) FROM hashtag_link WHERE
+            entry_id = accepted_entry.id
+            AND hashtag_id = (SELECT hashtag.id
+                              FROM hashtag
+                              WHERE hashtag.text = :tag))
+    ), hashtagged_parent AS
+    (
+        SELECT DISTINCT COALESCE(parent_id, id, parent_id) as id
+        FROM hashtagged_post
+    )
+SELECT accepted_entry.text, accepted_entry.id, (SELECT account_id FROM post WHERE post.id = hashtagged_parent.id), hashtagged_parent.id
+FROM hashtagged_parent INNER JOIN accepted_entry
+ON accepted_entry.post_id = hashtagged_parent.id
+ORDER BY accepted_entry.timestamp DESC
         """, {"tag": tag}).fetchall()
         for text, entry_id, account_id, post_id in top_level:
             result.append({"text": text, "entry_id":entry_id, "account_id":account_id, "replies":[], "post_id":post_id})
