@@ -151,14 +151,18 @@ WITH accepted_entry AS
         WHERE (SELECT COUNT(*) FROM vote WHERE
             upvote = true
             AND entry_id = entry.id) >= 2
-        GROUP BY post_id
-        ORDER BY timestamp DESC
+    ), current_accepted_entry AS
+    (
+        SELECT text, timestamp, id, post_id FROM accepted_entry
+        WHERE accepted_entry.timestamp =
+            (SELECT MAX(subquery.timestamp) FROM accepted_entry as subquery
+                WHERE subquery.post_id = accepted_entry.post_id)
     ), hashtagged_post AS
     (
         SELECT post_id as id, (SELECT parent_id FROM post WHERE post.id = post_id) as parent_id
-        FROM accepted_entry
+        FROM current_accepted_entry
         WHERE (SELECT COUNT(*) FROM hashtag_link WHERE
-            entry_id = accepted_entry.id
+            entry_id = current_accepted_entry.id
             AND hashtag_id = (SELECT hashtag.id
                               FROM hashtag
                               WHERE hashtag.text = :tag))
@@ -167,10 +171,10 @@ WITH accepted_entry AS
         SELECT DISTINCT COALESCE(parent_id, id, parent_id) as id
         FROM hashtagged_post
     )
-SELECT accepted_entry.text, accepted_entry.id, (SELECT account_id FROM post WHERE post.id = hashtagged_parent.id), hashtagged_parent.id
-FROM hashtagged_parent INNER JOIN accepted_entry
-ON accepted_entry.post_id = hashtagged_parent.id
-ORDER BY accepted_entry.timestamp DESC
+SELECT current_accepted_entry.text, current_accepted_entry.id, (SELECT account_id FROM post WHERE post.id = hashtagged_parent.id), hashtagged_parent.id
+FROM hashtagged_parent INNER JOIN current_accepted_entry
+ON current_accepted_entry.post_id = hashtagged_parent.id
+ORDER BY current_accepted_entry.timestamp DESC
         """, {"tag": tag}).fetchall()
         for text, entry_id, account_id, post_id in top_level:
             result.append({"text": text, "entry_id":entry_id, "account_id":account_id, "replies":[], "post_id":post_id})
