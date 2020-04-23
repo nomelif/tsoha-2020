@@ -37,7 +37,9 @@ Viesteihin voi lisätä risuaidalla merkittyjä #hakusanoja. Jotakin hakusanaa s
 
 ## Asennuksesta
 
-Omalle palvelimelle Värkin saa asennettua kloonaamalla tämän repositorion ja asentamalla `requirements.txt` -tiedostossa mainitut paketit. Helpoiten se käy komennolla `pip install -r requirements.txt`. venv-virtuaaliympäristöllä riippuvuudet asentuvat nätisti paikallisesti. Itse palvelimen saa käynnistymään komennolla `gunicorn --preload --workers 1 application:app` repositorion ylätasolta. Värkki luo itse käyttämänsä sqlite3 -tietokannan.
+Omalle palvelimelle Värkin saa asennettua kloonaamalla tämän repositorion ja asentamalla `requirements.txt` -tiedostossa mainitut paketit. Helpoiten se käy komennolla `pip install -r requirements.txt`. venv-virtuaaliympäristöllä riippuvuudet asentuvat nätisti paikallisesti. Itse palvelimen saa käynnistymään komennolla `gunicorn --preload --workers 1 application:app` repositorion ylätasolta. Värkki luo itse käyttämänsä sqlite3 -tietokannan. Tässä tilanteessa värkki kuuntelee porttia 8000.
+
+Jotta Värkin saa toimimaan PostgresSQL-tietokannan kanssa yhteen, tulee antaa `HEROKU`-ympäristömuuttujalle jokin arvo. Lisäksi ympäristömuuttujassa `DATABASE_URL` tulee olla kelpo osoite. Niiden muotoa pui esimerkiksi [tämä StackOverflow-postaus](https://stackoverflow.com/questions/43477244/how-to-find-postgresql-uri-for-sqlalchemy-config). Yleisesti värkki yrittäisi yhdistyä mihin tahansa `DATABASE_URL`-ympäristömuuttujassa määriteltyyn tietokantajärjestelmään. Käytännössä Värkki kuitenkin olettaa kyseessä olevan PostgresSQL.
 
 ## Dokumentaation rakenteesta
 
@@ -46,4 +48,10 @@ Dokumentaatiosta löytyy tiedot Värkin:
 * [Tietokantarakenteesta](documentation/db.md)
 * [Käyttötapauksista](documentation/usecases.md)
 * [Nykyisestä kehitysvaiheesta](documentation/status.md)
+
+## Rajoitteet
+
+Tällä hetkellä värkin pitäisi toteuttaa kaikki määritellyt käyttötapaukset tavalla tai toisella. Käyttöliittymää voi toki viilata.
+
+Loppujen lopuksi Värkki oli tutkimus sarjakuvassa pilanpäiten kuvatusta moderaatiomuodosta. Oma mielipiteeni on, ettei se lopulta ole toimiva. Pienellä vaivalla keksii montakin tapaa, jolla jokin bottimaakari voisi paikkoja rikkoa. Esimerkiksi joukko botteja voi jumittaa moderaatioketjun pienellä vaivalla. IP-osoite- ja käyttäjäkohtaiset tapahtumataajuusrajoitteet tai fyysinen rajoite vuorokausittaisiin uusiin käyttäjiin voisivat tehdä tilanteesta hallittavamman, mutta en usko Värkin olevan lopulta toimiva ajatus.
 
