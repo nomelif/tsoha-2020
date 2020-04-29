@@ -1,5 +1,7 @@
 # Käyttötapauksia
 
+Erilaisia käyttäjäryhmiä ei ole, mutta jotkin kirjautuneen käyttäjän toiminnot saavat kohdistua vain omiin viesteihin tai tiliasetuksiin.
+
 ## Tilinhallinta ✓
 
 * Käyttäjä tahtoo luoda värkkiin tunnuksen lukeakseen Värkki-viestejä. ✓
