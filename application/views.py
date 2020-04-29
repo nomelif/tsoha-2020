@@ -18,7 +18,14 @@ def index():
                     tags.append("#" + tag)
                 else:
                     tags.append(tag)
-        return render_template("index.html", user_name=account.user_name, account_id=account.id, posts=Post.get_displayable_posts(tags), title="Värkki", index=True)
+
+        # Remove HTML 
+
+        posts = Post.get_displayable_posts(tags)
+        for post in posts:
+            post["text"] = bleach.clean(post["text"])
+
+        return render_template("index.html", user_name=account.user_name, account_id=account.id, posts=posts, title="Värkki", index=True)
     else:
         return render_template("index-unlogged.html", title="Värkki (kirjautumaton)")
 
