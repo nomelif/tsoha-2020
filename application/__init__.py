@@ -24,15 +24,17 @@ db = SQLAlchemy(app)
 
 # Luetaan kansiosta application tiedoston views sisältö
 from application import views
+# Luetaan kansiosta application/account tiedoston views sisältö
+from application.account import views
 
-from application.varkki import account
+# from application.account import models as account
 from application.varkki import entry
 from application.varkki import post
 from application.varkki import vote
 from application.varkki import hashtag
 from application.varkki import hashtag_link
 
-from application.varkki.account import Account
+from application.account import Account
 from os import urandom
 app.config["SECRET_KEY"] = urandom(32)
 
