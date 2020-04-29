@@ -1,8 +1,8 @@
 from application import db
 
-from application.varkki.entry import Entry
-from application.varkki.vote import Vote
-from application.varkki.hashtag import insert_tags
+from .entry import Entry
+from .vote import Vote
+from .hashtag import insert_tags
 
 import sqlalchemy
 

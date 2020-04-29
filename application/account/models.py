@@ -3,9 +3,7 @@ import bcrypt
 import os
 from datetime import datetime
 
-from application.varkki.entry import Entry, delete_entry
-from application.varkki.post import Post
-from application.varkki.vote import Vote
+from application.post import Entry, delete_entry, Post, Vote
 
 def data_dump(account_id):
     data = {}

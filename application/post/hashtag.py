@@ -1,6 +1,6 @@
 from application import db
 
-from application.varkki.hashtag_link import HashtagLink
+from .hashtag_link import HashtagLink
 
 class Hashtag(db.Model):
 

@@ -4,7 +4,7 @@ import time
 import os
 from datetime import datetime
 
-from application.varkki.hashtag import delete_orphans
+from .hashtag import delete_orphans
 
 class Entry(db.Model):
     id = db.Column(db.Integer, primary_key=True)

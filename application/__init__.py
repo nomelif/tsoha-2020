@@ -26,13 +26,11 @@ db = SQLAlchemy(app)
 from application import views
 # Luetaan kansiosta application/account tiedoston views sisältö
 from application.account import views
+# Luetaan kansiosta application/post tiedoston views sisältö
+from application.post import views
 
-# from application.account import models as account
-from application.varkki import entry
-from application.varkki import post
-from application.varkki import vote
-from application.varkki import hashtag
-from application.varkki import hashtag_link
+from application.account import *
+from application.post import *
 
 from application.account import Account
 from os import urandom

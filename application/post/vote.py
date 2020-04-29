@@ -2,7 +2,7 @@ from application import db
 import time
 import os
 
-from application.varkki.entry import Entry, delete_entry
+from .entry import Entry, delete_entry
 
 class Vote(db.Model):
 
