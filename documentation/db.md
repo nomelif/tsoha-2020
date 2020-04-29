@@ -26,6 +26,7 @@ Table post {
 }
 
 Table vote {
+  id INTEGER [pk]
   entry_id INTEGER [ref: > entry.id]
   account_id INTEGER [ref: > account.id]
   upvote BOOLEAN
