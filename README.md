@@ -48,6 +48,7 @@ Dokumentaatiosta löytyy tiedot Värkin:
 * [Tietokantarakenteesta](documentation/db.md)
 * [Käyttötapauksista](documentation/usecases.md)
 * [Nykyisestä kehitysvaiheesta](documentation/status.md)
+* [Stressitestauksesta](documentation/stresstest.md)
 
 ## Rajoitteet
 

@@ -65,6 +65,8 @@ CREATE TABLE account (
 	UNIQUE (user_name)
 );
 
+CREATE UNIQUE INDEX ix_account_user_name ON account (user_name);
+
 /* Jokaisesta viestistä säilytetään versiohistoria. entry-taulun rivit ovat tällaisia versioita. post-taulun rivit taas viittaavat viestiketjuihin, jotka viesteistä muodostuvat.
  
  C: Sekä postauksia, että entryjä voi luoda
@@ -82,6 +84,8 @@ CREATE TABLE post (
 	FOREIGN KEY(account_id) REFERENCES account (id), -- Kun vastineen tehnyt käyttäjä poistetaan, tämä saa arvon NULL
 	FOREIGN KEY(parent_id) REFERENCES post (id) -- Ylätason postauksilla tämä saa arvon null
 );
+CREATE INDEX ix_post_account_id ON post (account_id);
+CREATE INDEX ix_post_parent_id ON post (parent_id);
 
 CREATE TABLE entry (
 	id INTEGER NOT NULL, 
@@ -91,6 +95,8 @@ CREATE TABLE entry (
 	PRIMARY KEY (id), 
 	FOREIGN KEY(post_id) REFERENCES post (id)
 );
+
+CREATE INDEX ix_entry_post_id ON entry (post_id);
 
 /* Äänitietokanta kertoo sen, kuka on äänestänyt ja mitä. Tavoitteena on estää, että samaa entry-riviä äänestäisi sama henkilö toistuvasti. */
 
@@ -109,6 +115,9 @@ CREATE TABLE vote (
 	CHECK (upvote IN (0, 1))
 );
 
+CREATE INDEX ix_vote_account_id ON vote (account_id);
+CREATE INDEX ix_vote_entry_id ON vote (entry_id);
+
 /* Viestissä olevat avainsanat normalisoidaan omaksi taulukseen */
 
 CREATE TABLE hashtag (
@@ -116,6 +125,8 @@ CREATE TABLE hashtag (
 	text VARCHAR(20) NOT NULL, 
 	PRIMARY KEY (id)
 );
+
+CREATE UNIQUE INDEX ix_hashtag_text ON hashtag (text);
 
 /* Tämä toimii puhtaasti monesta-moneen suhteen linkkitauluna. */
 
@@ -127,5 +138,8 @@ CREATE TABLE hashtag_link (
 	FOREIGN KEY(entry_id) REFERENCES entry (id) ON DELETE CASCADE, 
 	FOREIGN KEY(hashtag_id) REFERENCES hashtag (id) ON DELETE CASCADE
 );
+
+CREATE INDEX ix_hashtag_link_hashtag_id ON hashtag_link (hashtag_id);
+CREATE INDEX ix_hashtag_link_entry_id ON hashtag_link (entry_id);
 
 ```
