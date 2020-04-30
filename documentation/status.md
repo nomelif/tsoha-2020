@@ -1,6 +1,6 @@
 # Nykytila
 
-Värkkiin kirjautuminen ja tunnuksen luominen on nyt toteutettu ja heroku-sovellus toimii PostgreSQL-tietokannan päällä. Värkkiin voi kirjautunut käyttäjä lähettää viestejä ja äänestysketju toimii. Viestit näkyvät nyt ja omia viestejä voi poistaa ja muokata (muokkaukset tulevat näkyviin vasta kun ne ovat käyneet läpi moderaatioketjun. Muokatun viestin poistaminen palauttaa sen muokkausta edeltäneeseen tilaan). Käyttäjätunnuksen näkyvän nimen voi vaihtaa samoin kuin salasanan. Tilin voi poistaa kokonaan. Ylätason viesteihin voi vastata.
+Värkkiin kirjautuminen ja tunnuksen luominen on nyt toteutettu ja heroku-sovellus toimii PostgreSQL-tietokannan päällä. Värkkiin voi kirjautunut käyttäjä lähettää viestejä ja äänestysketju toimii. Viestit näkyvät nyt ja omia viestejä voi poistaa ja muokata (muokkaukset tulevat näkyviin vasta kun ne ovat käyneet läpi moderaatioketjun. Muokatun viestin poistaminen palauttaa sen muokkausta edeltäneeseen tilaan). Käyttäjätunnuksen näkyvän nimen voi vaihtaa samoin kuin salasanan. Tilin voi poistaa kokonaan. Ylätason viesteihin voi vastata. Hashtag-haku toimii.
 
 # Viikko 2
 
@@ -102,3 +102,25 @@ Näiden tilanne on (järjestyksessä)
 * Dokumentaatio piti pitkälti paikkansa.
 * Kirjoitin nyt pitkälti kaiken sen dokumentaation mitä pyydettiin.
 * Koodikatselmoin
+
+# Loppupalautus
+
+
+Loppupalautuksen tavoitteet olivat:
+
+* Viimeiset viilaukset
+* Loppupalautus
+* Demo
+
+Näiden tilanne on (järjestyksessä)
+
+* Olen viilaillut tässä kaikenlaista. Suurin osa on ollut dokumentaatioduunia, mutta ihan koodailuakin tuli tehtyä:
+    * Korjasin tietoturvabugin, jonka joku oli minulle itse sovellukseen demonstroinut [402844145e11420c720f95c6fbefcf4e54646b30](https://github.com/nomelif/tsoha-2020/commit/402844145e11420c720f95c6fbefcf4e54646b30)
+    * Normalisoin kaikki hakusanat pieniksi kirjaimiksi [973646c3b4b9568fd5a09faa6fd9ac1b6ec609cd](https://github.com/nomelif/tsoha-2020/commit/973646c3b4b9568fd5a09faa6fd9ac1b6ec609cd)
+    * Muunsin itse postauksien näyttämiseen käytetyn kyselysarjan yhdeksi hirviökyselyksi [b739afb3876463c224e8515f99346f36668ae66c](https://github.com/nomelif/tsoha-2020/commit/b739afb3876463c224e8515f99346f36668ae66c)
+    * Stressitestasin Värkkiä ja lisäsin siihen kirjoittamani työkalut repoon [ef0dc01e3a33b396ab836160641416740b102dcb](https://github.com/nomelif/tsoha-2020/commit/ef0dc01e3a33b396ab836160641416740b102dcb)
+    * Lisäsin stressitestauksen motivoimana tietokantaan indeksit
+    * Lisäsin etusivulle vievän linkin kaikille sivuille [e9d227286990a6499526a67c319b1e9b643fd469](https://github.com/nomelif/tsoha-2020/commit/e9d227286990a6499526a67c319b1e9b643fd469)
+    * Lisäsin käyttämiini kuvakkeisiin alt-tekstit [02cb40ad0741fee2776230d5b9cffc26fc4e0758](https://github.com/nomelif/tsoha-2020/commit/02cb40ad0741fee2776230d5b9cffc26fc4e0758)
+* Koen nyt saaneeni värkin pitkälti loppupalautuskuntoon
+* Demoa ei ilmeisesti pidetä
