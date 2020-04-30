@@ -167,7 +167,7 @@ FROM timestamped_parent INNER JOIN current_accepted_entry
     ORDER BY parent_timestamp DESC,
              parent_id DESC,
              current_accepted_entry.post_id = timestamped_parent.parent_id DESC,
-             current_accepted_entry.timestamp DESC
+             current_accepted_entry.timestamp ASC
         """
         params = {"tags": tags, "has_tags": len(tags) > 0}
         # SQLalchemy screws PostresSQL up if tags is an empty list
