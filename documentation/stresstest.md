@@ -15,3 +15,5 @@ Tulokset näyttävät tältä:
 ![Heroku](stresstest-heroku.svg)
 
 Olen tuloksiin tyytyväinen, sillä ne osoittavat, ettei värkistä löydy tyhmiä pullonkauloja ja että se kestää satoja viestejä ja tuhansia käyttäjiä ennen kuin se kyykkää.
+
+**Huom: ohjelma riippuu requests-kirjastosta, jota en lisännyt requirements.txt-tiedostoon, sillä itse Värkki ei sitä tarvitse.**
