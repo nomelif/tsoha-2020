@@ -8,9 +8,10 @@
 
     <body>
 
-        {% if user_name %}
+        <header style="text-align: right; height: 3em; width: 100%;">
 
-        <header style="text-align: right; height: 3em;">
+            <a href="/" style="position: absolute; display: block; margin-left: 0px;"><img src="/static/home.svg"/></a>
+            {% if user_name %}
             {% if index %}
             <form style="position: absolute; margin-left: 33.333%; width: 33.333%; display: flex; flex-direction: row;" action="/"><input name="tag" style="display: block; width: 80%;"/><input type=submit style="display: block;" value="Hae hakusanalla"></form>
             {% endif %}
@@ -18,9 +19,9 @@
             &nbsp; | &nbsp;
             <a href="/updateUser"><img src="/static/settings.svg" style="margin-bottom: -5px"/></a>
             {{user_name}} <a href="/logout"><img src="/static/logout.svg" style="margin-bottom: -5px;"/></a>
-        </header>
 
-        {% endif %}
+            {% endif %}
+        </header>
 
         {% block body %}
 
