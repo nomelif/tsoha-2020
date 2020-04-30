@@ -13,6 +13,7 @@ def index():
         query = request.args.get("tag")
         if query != None:
             for tag in query.split():
+                tag = tag.lower()
                 if not tag.startswith("#"):
                     tags.append("#" + tag)
                 else:
