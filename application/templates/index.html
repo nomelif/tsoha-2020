@@ -5,10 +5,12 @@
     <div class="main-form"/>
 
     {% for post in posts %}
-       <div class="postcard">
+       <div class="postcard {% if not post["is_top_level"] %}reply{% endif %}">
        {{post["text"]|markdown}}
 
+       {% if post["is_top_level"] %}
        <a href="/newpost?parent_id={{post["post_id"]}}"/><img alt="reply" src="/static/reply.svg"/></a>
+       {% endif %}
 
        {% if account_id == post["account_id"] %}
 
@@ -17,20 +19,6 @@
 
        {% endif %}
        </div>
-
-       {% for post in post["replies"] %}
-       <div class="postcard reply">
-
-       {{post["text"]|markdown}}
-
-       {% if account_id == post["account_id"] %}
-
-       <a href="/delete/{{post["entry_id"]}}"/><img alt="delete" src="/static/delete.svg"/></a>
-       <a href="/newpost?post_id={{post["post_id"]}}"/><img alt="edit" src="/static/create.svg"/></a>
-
-       {% endif %}
-       </div>
-       {% endfor %}
 
     {% endfor %}
 

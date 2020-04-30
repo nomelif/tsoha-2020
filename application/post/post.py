@@ -133,7 +133,7 @@ WITH accepted_entry AS
             AND entry_id = entry.id) >= 2
     ), current_accepted_entry AS
     (
-        SELECT text, timestamp, id, post_id FROM accepted_entry
+        SELECT text, timestamp, id, post_id, (SELECT parent_id FROM post WHERE post.id = post_id) as reply_id FROM accepted_entry
         WHERE accepted_entry.timestamp =
             (SELECT MAX(subquery.timestamp) FROM accepted_entry as subquery
                 WHERE subquery.post_id = accepted_entry.post_id)
@@ -151,11 +151,23 @@ WITH accepted_entry AS
     (
         SELECT DISTINCT COALESCE(parent_id, id, parent_id) as id
         FROM hashtagged_post
+    ), timestamped_parent AS
+    (
+        SELECT id AS parent_id,
+               (SELECT timestamp
+               FROM current_accepted_entry
+               WHERE post_id = hashtagged_parent.id) AS parent_timestamp
+        FROM hashtagged_parent
     )
-SELECT current_accepted_entry.text, current_accepted_entry.id, (SELECT account_id FROM post WHERE post.id = hashtagged_parent.id), hashtagged_parent.id
-FROM hashtagged_parent INNER JOIN current_accepted_entry
-ON current_accepted_entry.post_id = hashtagged_parent.id
-ORDER BY current_accepted_entry.timestamp DESC
+
+SELECT current_accepted_entry.text, current_accepted_entry.id, (SELECT account_id FROM post WHERE post.id = current_accepted_entry.post_id), timestamped_parent.parent_id, (SELECT current_accepted_entry.post_id = timestamped_parent.parent_id)
+FROM timestamped_parent INNER JOIN current_accepted_entry
+    ON current_accepted_entry.post_id = timestamped_parent.parent_id
+       OR current_accepted_entry.reply_id = timestamped_parent.parent_id
+    ORDER BY parent_timestamp DESC,
+             parent_id DESC,
+             current_accepted_entry.post_id = timestamped_parent.parent_id DESC,
+             current_accepted_entry.timestamp DESC
         """
         params = {"tags": tags, "has_tags": len(tags) > 0}
         # SQLalchemy screws PostresSQL up if tags is an empty list
@@ -164,26 +176,6 @@ ORDER BY current_accepted_entry.timestamp DESC
         t = sqlalchemy.text(sql_tmpl)
         t = t.bindparams(sqlalchemy.bindparam("tags", expanding=True))
         top_level = db.session.execute(t, params)
-        for text, entry_id, account_id, post_id in top_level:
-            result.append({"text": text, "entry_id":entry_id, "account_id":account_id, "replies":[], "post_id":post_id})
-            replies = db.session.execute("""
-SELECT text, entry.id, post.account_id, post.id
-FROM   post
-       INNER JOIN entry
-               ON post.id = entry.post_id
-       INNER JOIN (SELECT post_id,
-                          Max(timestamp) AS max_timestamp
-                   FROM   entry
-                   WHERE  (SELECT Count(*)
-                           FROM   vote
-                           WHERE  vote.entry_id = entry.id
-                                  AND vote.upvote = true) >= 2
-                   GROUP  BY post_id) AS pid_map
-               ON post.id = pid_map.post_id
-                  AND entry.timestamp = pid_map.max_timestamp
-WHERE  post.parent_id = :parent
-ORDER  BY entry.timestamp DESC  
-        """, {"parent": post_id}).fetchall()
-            for reply_text, reply_entry_id, reply_account_id, reply_post_id in replies:
-                result[-1]["replies"].append({"text":reply_text, "entry_id":reply_entry_id, "account_id":reply_account_id, "post_id":reply_post_id})
+        for text, entry_id, account_id, post_id, is_top_level in top_level:
+            result.append({"text": text, "entry_id":entry_id, "account_id":account_id, "post_id":post_id, "is_top_level":is_top_level})
         return result
