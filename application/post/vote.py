@@ -10,8 +10,8 @@ class Vote(db.Model):
 
     id = db.Column(db.Integer, primary_key=True)
     
-    entry_id = db.Column(db.Integer, db.ForeignKey("entry.id", ondelete="CASCADE"), nullable=False)
-    account_id = db.Column(db.Integer, db.ForeignKey("account.id"), nullable=True)
+    entry_id = db.Column(db.Integer, db.ForeignKey("entry.id", ondelete="CASCADE"), nullable=False, index=True)
+    account_id = db.Column(db.Integer, db.ForeignKey("account.id"), nullable=True, index=True)
     upvote = db.Column(db.Boolean, nullable=True)
 
     __table_args__ = (

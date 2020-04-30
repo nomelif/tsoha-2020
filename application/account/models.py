@@ -33,7 +33,7 @@ def data_dump(account_id):
 
 class Account(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    user_name = db.Column(db.String(20), nullable=False, unique=True)
+    user_name = db.Column(db.String(20), nullable=False, unique=True, index=True)
     password_hash = db.Column(db.String(60), nullable=False)
 
     def __init__(self, user_name, password):

@@ -8,8 +8,8 @@ class HashtagLink(db.Model):
 
     id = db.Column(db.Integer, primary_key=True)
     
-    entry_id = db.Column(db.Integer, db.ForeignKey("entry.id", ondelete="CASCADE"), nullable=False)
-    hashtag_id = db.Column(db.Integer, db.ForeignKey("hashtag.id", ondelete="CASCADE"), nullable=False)
+    entry_id = db.Column(db.Integer, db.ForeignKey("entry.id", ondelete="CASCADE"), nullable=False, index=True)
+    hashtag_id = db.Column(db.Integer, db.ForeignKey("hashtag.id", ondelete="CASCADE"), nullable=False, index=True)
 
     def __init__(self, entry_id, hashtag_id):
         self.entry_id = entry_id

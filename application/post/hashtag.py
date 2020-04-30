@@ -5,7 +5,7 @@ from .hashtag_link import HashtagLink
 class Hashtag(db.Model):
 
     id = db.Column(db.Integer, primary_key=True)
-    text = db.Column(db.String(140), nullable=False, unique=True)
+    text = db.Column(db.String(140), nullable=False, unique=True, index=True)
 
     def __init__(self, text):
         self.text = text

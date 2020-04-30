@@ -109,8 +109,8 @@ def submit_post(votes_cast, account_id, message, post_id, reply_id = None):
 
 class Post(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    account_id = db.Column(db.Integer, db.ForeignKey("account.id"), nullable=True)
-    parent_id = db.Column(db.Integer, db.ForeignKey("post.id"), nullable=True)
+    account_id = db.Column(db.Integer, db.ForeignKey("account.id"), nullable=True, index=True)
+    parent_id = db.Column(db.Integer, db.ForeignKey("post.id"), nullable=True, index=True)
 
     account = db.relationship("Account", foreign_keys="Post.account_id")
     parent = db.relationship("Post", foreign_keys="Post.parent_id")
